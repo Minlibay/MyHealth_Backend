@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MyHealth.Api.Common;
 using MyHealth.Api.Data;
 using MyHealth.Api.Domain;
+using MyHealth.Api.Features.Evaluation;
 
 namespace MyHealth.Api.Features.Metrics;
 
@@ -16,6 +17,33 @@ public record MetricSampleDto(
     string? ClientId);
 
 public record UploadResult(int Inserted, int Skipped);
+
+/// <summary>Запись с рассчитанными на сервере полями (статус, форматирование).</summary>
+public record SampleDto(
+    Guid Id,
+    MetricType Metric,
+    double Value,
+    double? Secondary,
+    string? Unit,
+    DateTimeOffset RecordedAt,
+    string? Source,
+    string DisplayValue,
+    HealthStatus Status,
+    string StatusLabel)
+{
+    public static SampleDto From(HealthSample s)
+    {
+        var status = MetricEvaluator.Evaluate(s.Metric, s.Value, s.Secondary);
+        return new SampleDto(
+            s.Id, s.Metric, s.Value, s.Secondary, s.Unit, s.RecordedAt, s.Source,
+            MetricEvaluator.Format(s.Metric, s.Value, s.Secondary),
+            status, MetricEvaluator.Label(status));
+    }
+}
+
+public record MetricStatsDto(
+    MetricType Metric, int Count, double Avg, double Min, double Max, double Latest,
+    HealthStatus LatestStatus);
 
 public static class MetricsEndpoints
 {
@@ -33,7 +61,6 @@ public static class MetricsEndpoints
             if (userId is null) return Results.Unauthorized();
             if (items.Count == 0) return Results.Ok(new UploadResult(0, 0));
 
-            // Уже загруженные клиентские записи — чтобы не плодить дубли.
             var clientIds = items
                 .Where(i => i.ClientId is not null)
                 .Select(i => i.ClientId!)
@@ -71,7 +98,7 @@ public static class MetricsEndpoints
             return Results.Ok(new UploadResult(inserted, items.Count - inserted));
         });
 
-        // История показателя за период.
+        // История показателя за период (со статусом, рассчитанным на сервере).
         group.MapGet("/", async (
             ClaimsPrincipal principal, AppDbContext db,
             MetricType? metric, DateTimeOffset? from, DateTimeOffset? to,
@@ -90,10 +117,10 @@ public static class MetricsEndpoints
                 .Take(Math.Clamp(limit, 1, 5000))
                 .ToListAsync();
 
-            return Results.Ok(data);
+            return Results.Ok(data.Select(SampleDto.From));
         });
 
-        // Последнее значение по каждому показателю.
+        // Последнее значение по каждому показателю (со статусом).
         group.MapGet("/latest", async (ClaimsPrincipal principal, AppDbContext db) =>
         {
             var userId = principal.GetUserId();
@@ -105,7 +132,42 @@ public static class MetricsEndpoints
                 .Select(g => g.OrderByDescending(s => s.RecordedAt).First())
                 .ToListAsync();
 
-            return Results.Ok(latest);
+            return Results.Ok(latest.Select(SampleDto.From));
+        });
+
+        // Статистика по показателю за период: среднее/мин/макс/кол-во + статус последнего.
+        group.MapGet("/stats", async (
+            ClaimsPrincipal principal, AppDbContext db,
+            MetricType? metric, DateTimeOffset? from, DateTimeOffset? to) =>
+        {
+            var userId = principal.GetUserId();
+            if (userId is null) return Results.Unauthorized();
+
+            var q = db.Samples.AsNoTracking().Where(s => s.UserId == userId);
+            if (metric is not null) q = q.Where(s => s.Metric == metric);
+            if (from is not null) q = q.Where(s => s.RecordedAt >= from);
+            if (to is not null) q = q.Where(s => s.RecordedAt <= to);
+
+            var agg = await q
+                .GroupBy(s => s.Metric)
+                .Select(g => new
+                {
+                    Metric = g.Key,
+                    Count = g.Count(),
+                    Avg = g.Average(x => x.Value),
+                    Min = g.Min(x => x.Value),
+                    Max = g.Max(x => x.Value),
+                    Latest = g.OrderByDescending(x => x.RecordedAt).First().Value,
+                    LatestSecondary =
+                        g.OrderByDescending(x => x.RecordedAt).First().Secondary,
+                })
+                .ToListAsync();
+
+            var result = agg.Select(a => new MetricStatsDto(
+                a.Metric, a.Count, a.Avg, a.Min, a.Max, a.Latest,
+                MetricEvaluator.Evaluate(a.Metric, a.Latest, a.LatestSecondary)));
+
+            return Results.Ok(result);
         });
 
         return app;

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MyHealth.Api.Auth;
 using MyHealth.Api.Data;
+using MyHealth.Api.Features.Evaluation;
 using MyHealth.Api.Features.Metrics;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -91,5 +92,6 @@ app.MapGet("/health", () => Results.Ok(new { status = "ok", at = DateTimeOffset.
 
 app.MapAuthEndpoints();
 app.MapMetricEndpoints();
+app.MapEvaluationEndpoints();
 
 app.Run();

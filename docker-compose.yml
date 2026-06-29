@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_DB: myhealth
       POSTGRES_USER: myhealth
-      POSTGRES_PASSWORD: myhealth_dev_pw
+      POSTGRES_PASSWORD: myhealth
     ports:
       - "5434:5432"
     volumes:

@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:17
+    container_name: myhealth-db
+    environment:
+      POSTGRES_DB: myhealth
+      POSTGRES_USER: myhealth
+      POSTGRES_PASSWORD: myhealth_dev_pw
+    ports:
+      - "5434:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U myhealth -d myhealth"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:

@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:17
+    container_name: myhealth-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    # Порт наружу не публикуем — БД доступна только из сети compose.
+
+  api:
+    build: .
+    container_name: myhealth-api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__Postgres: "Host=db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}"
+      Jwt__Key: ${JWT_KEY}
+      Jwt__Issuer: ${JWT_ISSUER:-MyHealth}
+      Jwt__Audience: ${JWT_AUDIENCE:-MyHealth}
+    ports:
+      # Слушаем только на localhost — наружу проксирует Nginx с TLS.
+      - "127.0.0.1:8080:8080"
+
+volumes:
+  pgdata:

@@ -1,0 +1,46 @@
+@host = https://localhost:7000
+
+### Health check
+GET {{host}}/health
+
+### Регистрация
+# @name register
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "supersecret123",
+  "displayName": "Тестовый пользователь"
+}
+
+### Вход
+# @name login
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "supersecret123"
+}
+
+@token = {{login.response.body.token}}
+
+### Загрузка показателей (пакетом, идемпотентно по clientId)
+POST {{host}}/api/metrics
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+[
+  { "metric": "HeartRate", "value": 72, "recordedAt": "2026-06-24T09:00:00Z", "unit": "bpm", "source": "Apple Watch", "clientId": "hr-1" },
+  { "metric": "BloodPressure", "value": 120, "secondary": 80, "recordedAt": "2026-06-24T09:05:00Z", "unit": "mmHg", "clientId": "bp-1" },
+  { "metric": "Steps", "value": 7842, "recordedAt": "2026-06-24T09:10:00Z", "clientId": "steps-2026-06-24" }
+]
+
+### История пульса за период
+GET {{host}}/api/metrics?metric=HeartRate&from=2026-06-01T00:00:00Z
+Authorization: Bearer {{token}}
+
+### Последние значения по всем показателям
+GET {{host}}/api/metrics/latest
+Authorization: Bearer {{token}}

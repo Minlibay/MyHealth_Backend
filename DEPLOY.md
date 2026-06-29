@@ -55,6 +55,12 @@ sudo ufw enable
 curl https://api.example.com/health
 ```
 
+## Если API падает с `28P01: password authentication failed`
+Том PostgreSQL инициализирует пароль ТОЛЬКО при первом создании. Если меняешь
+`POSTGRES_PASSWORD` в `.env` для уже существующего тома — пароль в БД не обновится.
+Либо верни прежний пароль, либо пересоздай том (УДАЛИТ данные):
+`docker compose -f docker-compose.prod.yml down -v && docker compose -f docker-compose.prod.yml up -d --build`.
+
 ## Обновление версии
 ```bash
 git pull

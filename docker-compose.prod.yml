@@ -30,8 +30,9 @@ services:
       Jwt__Issuer: ${JWT_ISSUER:-MyHealth}
       Jwt__Audience: ${JWT_AUDIENCE:-MyHealth}
     ports:
-      # Слушаем только на localhost — наружу проксирует Nginx с TLS.
-      - "127.0.0.1:8080:8080"
+      # Уникальный порт наружу (прямой доступ по IP, без конфликта с другими контейнерами).
+      # Когда появится домен — верни "127.0.0.1:53917:8080" и проксируй через Nginx+TLS.
+      - "53917:8080"
 
 volumes:
   pgdata:

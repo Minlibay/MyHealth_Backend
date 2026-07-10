@@ -40,9 +40,31 @@ public static class MetricEvaluator
                 if (v < 5 || v > 10) return HealthStatus.Warn;
                 return HealthStatus.Ok;
 
-            // Для шагов и веса нет универсальной нормы — не оцениваем.
+            case MetricType.BodyTemperature:
+                if (v >= 38.5 || v < 35.0) return HealthStatus.Alert;
+                if (v >= 37.5 || v < 36.0) return HealthStatus.Warn;
+                return HealthStatus.Ok;
+
+            case MetricType.RespiratoryRate:
+                if (v > 24 || v < 8) return HealthStatus.Alert;
+                if (v > 20 || v < 10) return HealthStatus.Warn;
+                return HealthStatus.Ok;
+
+            case MetricType.RestingHeartRate:
+                if (v > 100 || v < 40) return HealthStatus.Alert;
+                if (v > 90 || v < 50) return HealthStatus.Warn;
+                return HealthStatus.Ok;
+
+            // Для активности, воды, HRV, состава тела и роста
+            // нет универсальной нормы — не оцениваем.
             case MetricType.Steps:
             case MetricType.Weight:
+            case MetricType.ActiveEnergy:
+            case MetricType.Distance:
+            case MetricType.Water:
+            case MetricType.Hrv:
+            case MetricType.BodyFat:
+            case MetricType.Height:
             default:
                 return HealthStatus.Unknown;
         }

@@ -7,6 +7,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 {
     public DbSet<AppUser> Users => Set<AppUser>();
     public DbSet<HealthSample> Samples => Set<HealthSample>();
+    public DbSet<Workout> Workouts => Set<Workout>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
@@ -35,6 +36,26 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
             // Идемпотентность загрузки: одна клиентская запись на пользователя.
             e.HasIndex(s => new { s.UserId, s.ClientId })
+                .IsUnique()
+                .HasFilter("\"ClientId\" IS NOT NULL");
+        });
+
+        b.Entity<Workout>(e =>
+        {
+            e.Property(w => w.ActivityType).HasMaxLength(64);
+            e.Property(w => w.Source).HasMaxLength(128);
+            e.Property(w => w.ClientId).HasMaxLength(128);
+
+            e.HasOne(w => w.User)
+                .WithMany()
+                .HasForeignKey(w => w.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Быстрая выборка тренировок пользователя за период.
+            e.HasIndex(w => new { w.UserId, w.StartedAt });
+
+            // Идемпотентность загрузки: одна клиентская запись на пользователя.
+            e.HasIndex(w => new { w.UserId, w.ClientId })
                 .IsUnique()
                 .HasFilter("\"ClientId\" IS NOT NULL");
         });

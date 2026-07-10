@@ -13,4 +13,13 @@ public enum MetricType
     Sleep,
     BloodGlucose,
     BloodOxygen,
+    ActiveEnergy,
+    Distance,
+    Water,
+    BodyTemperature,
+    RespiratoryRate,
+    RestingHeartRate,
+    Hrv,
+    BodyFat,
+    Height,
 }

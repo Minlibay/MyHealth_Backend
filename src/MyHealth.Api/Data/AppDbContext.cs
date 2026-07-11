@@ -8,6 +8,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<AppUser> Users => Set<AppUser>();
     public DbSet<HealthSample> Samples => Set<HealthSample>();
     public DbSet<Workout> Workouts => Set<Workout>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public DbSet<SleepSession> SleepSessions => Set<SleepSession>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
@@ -35,6 +37,35 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             e.HasIndex(s => new { s.UserId, s.Metric, s.RecordedAt });
 
             // Идемпотентность загрузки: одна клиентская запись на пользователя.
+            e.HasIndex(s => new { s.UserId, s.ClientId })
+                .IsUnique()
+                .HasFilter("\"ClientId\" IS NOT NULL");
+        });
+
+        b.Entity<RefreshToken>(e =>
+        {
+            e.Property(t => t.TokenHash).HasMaxLength(64);
+            e.HasIndex(t => t.TokenHash).IsUnique();
+            e.HasIndex(t => t.UserId);
+
+            e.HasOne(t => t.User)
+                .WithMany()
+                .HasForeignKey(t => t.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        b.Entity<SleepSession>(e =>
+        {
+            e.Property(s => s.Source).HasMaxLength(128);
+            e.Property(s => s.ClientId).HasMaxLength(128);
+
+            e.HasOne(s => s.User)
+                .WithMany()
+                .HasForeignKey(s => s.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            e.HasIndex(s => new { s.UserId, s.StartedAt });
+
             e.HasIndex(s => new { s.UserId, s.ClientId })
                 .IsUnique()
                 .HasFilter("\"ClientId\" IS NOT NULL");

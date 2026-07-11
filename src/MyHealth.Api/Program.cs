@@ -8,7 +8,10 @@ using Microsoft.IdentityModel.Tokens;
 using MyHealth.Api.Auth;
 using MyHealth.Api.Data;
 using MyHealth.Api.Features.Evaluation;
+using MyHealth.Api.Features.Insights;
 using MyHealth.Api.Features.Metrics;
+using MyHealth.Api.Features.Sleep;
+using MyHealth.Api.Features.User;
 using MyHealth.Api.Features.Workouts;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -95,5 +98,8 @@ app.MapAuthEndpoints();
 app.MapMetricEndpoints();
 app.MapEvaluationEndpoints();
 app.MapWorkoutEndpoints();
+app.MapSleepEndpoints();
+app.MapUserEndpoints();
+app.MapInsightEndpoints();
 
 app.Run();

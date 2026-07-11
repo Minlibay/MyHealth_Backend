@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -8,6 +9,9 @@ using MyHealth.Api.Domain;
 namespace MyHealth.Api.Auth;
 
 public record TokenResult(string Token, DateTimeOffset ExpiresAt);
+
+/// <summary>Пара «значение для клиента + сущность с хешем для БД».</summary>
+public record RefreshTokenResult(string Token, RefreshToken Entity);
 
 public class TokenService(IOptions<JwtSettings> options)
 {
@@ -36,4 +40,20 @@ public class TokenService(IOptions<JwtSettings> options)
 
         return new TokenResult(new JwtSecurityTokenHandler().WriteToken(token), expires);
     }
+
+    /// <summary>Новый refresh-токен: 64 случайных байта, в БД — только хеш.</summary>
+    public RefreshTokenResult CreateRefresh(Guid userId)
+    {
+        var raw = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+        var entity = new RefreshToken
+        {
+            UserId = userId,
+            TokenHash = Hash(raw),
+            ExpiresAt = DateTimeOffset.UtcNow.AddDays(_s.RefreshExpiryDays),
+        };
+        return new RefreshTokenResult(raw, entity);
+    }
+
+    public static string Hash(string token) =>
+        Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(token)));
 }

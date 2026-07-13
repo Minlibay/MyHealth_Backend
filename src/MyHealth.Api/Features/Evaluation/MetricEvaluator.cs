@@ -65,6 +65,7 @@ public static class MetricEvaluator
             case MetricType.Hrv:
             case MetricType.BodyFat:
             case MetricType.Height:
+            case MetricType.DietaryEnergy:
             default:
                 return HealthStatus.Unknown;
         }

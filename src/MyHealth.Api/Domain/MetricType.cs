@@ -22,4 +22,5 @@ public enum MetricType
     Hrv,
     BodyFat,
     Height,
+    DietaryEnergy,
 }

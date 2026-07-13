@@ -24,12 +24,53 @@ public record WorkoutDto(
     double DurationMinutes,
     double? EnergyKcal,
     double? DistanceMeters,
-    string? Source)
+    string? Source,
+    double? AvgHr,
+    double? MaxHr,
+    /// <summary>Минуты в зонах пульса Z1..Z5 (50-60-70-80-90%+ от HRmax).</summary>
+    List<double>? ZonesMinutes,
+    /// <summary>TRIMP по Эдвардсу: Σ минут в зоне × номер зоны.</summary>
+    double? Trimp)
 {
-    public static WorkoutDto From(Workout w) => new(
-        w.Id, w.ActivityType, w.StartedAt, w.EndedAt,
-        (w.EndedAt - w.StartedAt).TotalMinutes,
-        w.EnergyKcal, w.DistanceMeters, w.Source);
+    public static WorkoutDto From(Workout w, List<(DateTimeOffset At, double Hr)>? hr = null)
+    {
+        var minutes = (w.EndedAt - w.StartedAt).TotalMinutes;
+        double? avg = null, max = null, trimp = null;
+        List<double>? zones = null;
+
+        var points = hr?.Where(p => p.At >= w.StartedAt && p.At <= w.EndedAt)
+            .Select(p => p.Hr)
+            .ToList();
+        if (points is { Count: >= 2 })
+        {
+            avg = Math.Round(points.Average());
+            max = points.Max();
+            // Точки пульса распределяем равномерно по длительности тренировки.
+            var minutesPerPoint = minutes / points.Count;
+            zones = [0, 0, 0, 0, 0];
+            const double hrMax = 190; // без возраста берём типовой максимум
+            foreach (var p in points)
+            {
+                var pct = p / hrMax;
+                var zone = pct switch
+                {
+                    < 0.6 => 0,
+                    < 0.7 => 1,
+                    < 0.8 => 2,
+                    < 0.9 => 3,
+                    _ => 4,
+                };
+                zones[zone] += minutesPerPoint;
+            }
+            zones = zones.Select(z => Math.Round(z, 1)).ToList();
+            trimp = Math.Round(zones.Select((z, i) => z * (i + 1)).Sum(), 1);
+        }
+
+        return new WorkoutDto(
+            w.Id, w.ActivityType, w.StartedAt, w.EndedAt, minutes,
+            w.EnergyKcal, w.DistanceMeters, w.Source,
+            avg, max, zones, trimp);
+    }
 }
 
 public static class WorkoutsEndpoints
@@ -101,8 +142,22 @@ public static class WorkoutsEndpoints
                 .OrderByDescending(w => w.StartedAt)
                 .Take(Math.Clamp(limit, 1, 1000))
                 .ToListAsync();
+            if (data.Count == 0) return Results.Ok(Enumerable.Empty<WorkoutDto>());
 
-            return Results.Ok(data.Select(WorkoutDto.From));
+            // Пульс за общее окно всех тренировок одним запросом —
+            // для зон и TRIMP каждой тренировки.
+            var minStart = data.Min(w => w.StartedAt);
+            var maxEnd = data.Max(w => w.EndedAt);
+            var hr = (await db.Samples.AsNoTracking()
+                    .Where(s => s.UserId == userId &&
+                                s.Metric == MetricType.HeartRate &&
+                                s.RecordedAt >= minStart && s.RecordedAt <= maxEnd)
+                    .Select(s => new { s.RecordedAt, s.Value })
+                    .ToListAsync())
+                .Select(s => (s.RecordedAt, s.Value))
+                .ToList();
+
+            return Results.Ok(data.Select(w => WorkoutDto.From(w, hr)));
         });
 
         return app;

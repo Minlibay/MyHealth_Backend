@@ -13,6 +13,22 @@ public class AppUser
 
     public string? DisplayName { get; set; }
 
+    // --- Профиль: физические параметры (для зон пульса, калорий кольца) ---
+
+    /// <summary>"male" | "female".</summary>
+    public string? Gender { get; set; }
+
+    public int? Age { get; set; }
+    public double? HeightCm { get; set; }
+    public double? WeightKg { get; set; }
+
+    // --- Персональные цели (для скоров; null — цели по умолчанию) ---
+
+    public int? StepsGoal { get; set; }
+    public double? WaterGoalLiters { get; set; }
+    public double? SleepGoalHours { get; set; }
+    public int? KcalGoal { get; set; }
+
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
     public ICollection<HealthSample> Samples { get; set; } = new List<HealthSample>();

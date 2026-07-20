@@ -78,6 +78,15 @@ public static class InsightsEndpoints
                 var now = DateTimeOffset.UtcNow;
                 var from = now.AddDays(-30);
 
+                // Персональные цели из профиля (null → значения по умолчанию).
+                var profile = await db.Users.AsNoTracking()
+                    .Where(u => u.Id == userId)
+                    .Select(u => new Goals(
+                        u.SleepGoalHours ?? 8,
+                        u.WaterGoalLiters ?? 2,
+                        u.KcalGoal))
+                    .FirstOrDefaultAsync() ?? new Goals(8, 2, null);
+
                 var samples = await db.Samples.AsNoTracking()
                     .Where(s => s.UserId == userId &&
                                 s.RecordedAt >= from &&
@@ -106,7 +115,8 @@ public static class InsightsEndpoints
                 var trends = ComputeTrends(byMetric, now);
                 var trainingLoad = ComputeTrainingLoad(workouts, now);
 
-                var ctx = new ScoreContext(byMetric, baselines, lastSleep, workouts, now);
+                var ctx = new ScoreContext(
+                    byMetric, baselines, lastSleep, workouts, now, profile);
                 var scores = new List<ScoreDto>();
                 void add(ScoreDto? s)
                 {
@@ -162,12 +172,16 @@ public static class InsightsEndpoints
     private sealed record Pt(MetricType Metric, double Value, DateTimeOffset RecordedAt);
     private sealed record WorkoutPt(DateTimeOffset Start, DateTimeOffset End, double? EnergyKcal);
 
+    /// <summary>Цели из профиля пользователя (с дефолтами).</summary>
+    private sealed record Goals(double SleepHours, double WaterLiters, int? Kcal);
+
     private sealed record ScoreContext(
         Dictionary<MetricType, List<Pt>> ByMetric,
         List<BaselineDto> Baselines,
         SleepSession? LastSleep,
         List<WorkoutPt> Workouts,
-        DateTimeOffset Now)
+        DateTimeOffset Now,
+        Goals Goals)
     {
         public BaselineDto? Baseline(MetricType m) =>
             Baselines.FirstOrDefault(b => b.Metric == m);
@@ -290,14 +304,17 @@ public static class InsightsEndpoints
 
         if (hours is not double h) return null;
 
+        var goal = ctx.Goals.SleepHours;
+        var over = goal + 2; // «пересып» — на два часа больше цели
         var factors = new List<ScoreFactorDto>
         {
-            F("Длительность", $"{h:0.0} ч из целевых 8", Clamp01(h / 8) - 0.85),
+            F("Длительность", $"{h:0.0} ч из целевых {goal:0.#}",
+                Clamp01(h / goal) - 0.85),
         };
-        if (h > 10) factors.Add(F("Пересып", $"{h:0.0} ч — больше 10", -0.2));
+        if (h > over) factors.Add(F("Пересып", $"{h:0.0} ч — больше {over:0.#}", -0.2));
 
         int value;
-        var durationPoints = Clamp01(h / 8) - (h > 10 ? 0.15 : 0);
+        var durationPoints = Clamp01(h / goal) - (h > over ? 0.15 : 0);
         if (deepShare is double d && remShare is double r)
         {
             factors.Add(F("Глубокий сон", $"{d * 100:0}% при целевых 20%", Clamp01(d / 0.2) - 0.8));
@@ -478,7 +495,7 @@ public static class InsightsEndpoints
             .Where(p => p.RecordedAt >= ctx.Now.AddDays(-7))
             .Select(p => p.Value).ToList();
         var sleepBalance = sleepList.Count > 0
-            ? sleepList.Average() / 8 - 1 // недосып копится
+            ? sleepList.Average() / ctx.Goals.SleepHours - 1 // недосып копится
             : 0;
         var weekTrimp = ctx.Workouts
             .Where(w => w.Start >= ctx.Now.AddDays(-7))
@@ -511,9 +528,11 @@ public static class InsightsEndpoints
         var water = ctx.DaySum(MetricType.Water);
         if (kcal <= 0 && water <= 0) return null;
 
-        var kcalTarget = ctx.Baseline(MetricType.DietaryEnergy)?.Avg is double avg && avg > 500
-            ? avg
-            : 2000;
+        // Цель калорий: профиль → личное среднее → 2000.
+        var kcalTarget = ctx.Goals.Kcal
+            ?? (ctx.Baseline(MetricType.DietaryEnergy)?.Avg is double avg && avg > 500
+                ? avg
+                : 2000);
 
         var factors = new List<ScoreFactorDto>();
         double value = 0;
@@ -530,10 +549,12 @@ public static class InsightsEndpoints
         }
         if (water > 0)
         {
-            var waterScore = Clamp01(water / 2.0);
+            var waterScore = Clamp01(water / ctx.Goals.WaterLiters);
             value += 30 * waterScore;
             weight += 30;
-            factors.Add(F("Вода", $"{water:0.0} л из 2 л", waterScore - 0.7));
+            factors.Add(F("Вода",
+                $"{water:0.0} л из {ctx.Goals.WaterLiters:0.#} л",
+                waterScore - 0.7));
         }
         if (weight == 0) return null;
         return new ScoreDto("nutrition", "Питание",

@@ -9,6 +9,17 @@ namespace MyHealth.Api.Features.User;
 
 public record DeleteAccountRequest(string Password);
 
+/// <summary>Профиль: физические параметры и персональные цели.</summary>
+public record ProfileDto(
+    string? Gender,
+    int? Age,
+    double? HeightCm,
+    double? WeightKg,
+    int? StepsGoal,
+    double? WaterGoalLiters,
+    double? SleepGoalHours,
+    int? KcalGoal);
+
 /// <summary>GDPR: экспорт всех данных пользователя и удаление аккаунта.</summary>
 public static class UserEndpoints
 {
@@ -17,6 +28,38 @@ public static class UserEndpoints
         var group = app.MapGroup("/api/user")
             .WithTags("User")
             .RequireAuthorization();
+
+        group.MapGet("/profile", async (ClaimsPrincipal principal, AppDbContext db) =>
+        {
+            var userId = principal.GetUserId();
+            if (userId is null) return Results.Unauthorized();
+            var u = await db.Users.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == userId);
+            if (u is null) return Results.Unauthorized();
+            return Results.Ok(new ProfileDto(
+                u.Gender, u.Age, u.HeightCm, u.WeightKg,
+                u.StepsGoal, u.WaterGoalLiters, u.SleepGoalHours, u.KcalGoal));
+        });
+
+        group.MapPut("/profile", async (
+            ProfileDto dto, ClaimsPrincipal principal, AppDbContext db) =>
+        {
+            var userId = principal.GetUserId();
+            if (userId is null) return Results.Unauthorized();
+            var u = await db.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            if (u is null) return Results.Unauthorized();
+
+            u.Gender = dto.Gender is "male" or "female" ? dto.Gender : null;
+            u.Age = Clamp(dto.Age, 5, 120);
+            u.HeightCm = Clamp(dto.HeightCm, 80, 250);
+            u.WeightKg = Clamp(dto.WeightKg, 20, 350);
+            u.StepsGoal = Clamp(dto.StepsGoal, 1000, 100_000);
+            u.WaterGoalLiters = Clamp(dto.WaterGoalLiters, 0.5, 10);
+            u.SleepGoalHours = Clamp(dto.SleepGoalHours, 4, 12);
+            u.KcalGoal = Clamp(dto.KcalGoal, 800, 10_000);
+            await db.SaveChangesAsync();
+            return Results.Ok();
+        });
 
         // Полный экспорт данных пользователя (право на переносимость, GDPR ст. 20).
         group.MapGet("/export", async (ClaimsPrincipal principal, AppDbContext db) =>
@@ -92,4 +135,10 @@ public static class UserEndpoints
 
         return app;
     }
+
+    private static int? Clamp(int? v, int min, int max) =>
+        v is int x ? Math.Clamp(x, min, max) : null;
+
+    private static double? Clamp(double? v, double min, double max) =>
+        v is double x ? Math.Clamp(x, min, max) : null;
 }

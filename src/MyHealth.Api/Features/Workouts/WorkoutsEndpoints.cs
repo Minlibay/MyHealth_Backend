@@ -32,7 +32,10 @@ public record WorkoutDto(
     /// <summary>TRIMP по Эдвардсу: Σ минут в зоне × номер зоны.</summary>
     double? Trimp)
 {
-    public static WorkoutDto From(Workout w, List<(DateTimeOffset At, double Hr)>? hr = null)
+    public static WorkoutDto From(
+        Workout w,
+        List<(DateTimeOffset At, double Hr)>? hr = null,
+        double hrMax = 190)
     {
         var minutes = (w.EndedAt - w.StartedAt).TotalMinutes;
         double? avg = null, max = null, trimp = null;
@@ -48,7 +51,6 @@ public record WorkoutDto(
             // Точки пульса распределяем равномерно по длительности тренировки.
             var minutesPerPoint = minutes / points.Count;
             zones = [0, 0, 0, 0, 0];
-            const double hrMax = 190; // без возраста берём типовой максимум
             foreach (var p in points)
             {
                 var pct = p / hrMax;
@@ -146,6 +148,14 @@ public static class WorkoutsEndpoints
 
             // Пульс за общее окно всех тренировок одним запросом —
             // для зон и TRIMP каждой тренировки.
+            // Максимальный пульс — из возраста в профиле (220 − возраст),
+            // без профиля берём типовые 190 (≈ 30 лет).
+            var age = await db.Users.AsNoTracking()
+                .Where(u => u.Id == userId)
+                .Select(u => u.Age)
+                .FirstOrDefaultAsync();
+            var hrMax = age is int a ? 220.0 - a : 190.0;
+
             var minStart = data.Min(w => w.StartedAt);
             var maxEnd = data.Max(w => w.EndedAt);
             var hr = (await db.Samples.AsNoTracking()
@@ -157,7 +167,7 @@ public static class WorkoutsEndpoints
                 .Select(s => (s.RecordedAt, s.Value))
                 .ToList();
 
-            return Results.Ok(data.Select(w => WorkoutDto.From(w, hr)));
+            return Results.Ok(data.Select(w => WorkoutDto.From(w, hr, hrMax)));
         });
 
         return app;

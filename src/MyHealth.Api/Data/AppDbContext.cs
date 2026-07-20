@@ -10,6 +10,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Workout> Workouts => Set<Workout>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<SleepSession> SleepSessions => Set<SleepSession>();
+    public DbSet<TagEvent> TagEvents => Set<TagEvent>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
@@ -53,6 +54,16 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .WithMany()
                 .HasForeignKey(t => t.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        b.Entity<TagEvent>(e =>
+        {
+            e.Property(t => t.Tag).HasMaxLength(64);
+            e.HasOne(t => t.User)
+                .WithMany()
+                .HasForeignKey(t => t.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            e.HasIndex(t => new { t.UserId, t.At });
         });
 
         b.Entity<SleepSession>(e =>

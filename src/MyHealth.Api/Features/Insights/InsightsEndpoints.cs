@@ -38,6 +38,27 @@ public record TrainingLoadDto(
     double? Ratio,
     string Status); // low | optimal | high | risky | unknown
 
+/// <summary>Ночные показатели, рассчитанные из последней сессии сна.</summary>
+public record NightVitalsDto(
+    double? RestingHr,
+    double? RestingHrBaseline,
+    double? Spo2Min,
+    int? Spo2Dips,
+    double? SleepRegularityMinutes);
+
+/// <summary>Точка почасового стресс-таймлайна.</summary>
+public record StressPointDto(DateTimeOffset At, int Value);
+
+/// <summary>Недельный отчёт: эта неделя против прошлой.</summary>
+public record WeeklyReportDto(
+    DateTimeOffset From,
+    DateTimeOffset To,
+    List<TrendDto> Trends,
+    int WorkoutsThisWeek,
+    int WorkoutsLastWeek,
+    double TrimpThisWeek,
+    double TrimpLastWeek);
+
 public record InsightsDto(
     DateTimeOffset At,
     int? HealthScore,
@@ -45,6 +66,9 @@ public record InsightsDto(
     int? ReadinessScore,
     List<ScoreDto> Scores,
     TrainingLoadDto TrainingLoad,
+    NightVitalsDto Night,
+    double? Vo2Max,
+    List<StressPointDto> StressTimeline,
     List<BaselineDto> Baselines,
     List<TrendDto> Trends,
     List<AnomalyDto> Anomalies);
@@ -94,10 +118,14 @@ public static class InsightsEndpoints
                     .Select(s => new Pt(s.Metric, s.Value, s.RecordedAt))
                     .ToListAsync();
 
-                var lastSleep = await db.SleepSessions.AsNoTracking()
-                    .Where(s => s.UserId == userId && s.EndedAt >= now.AddDays(-2))
+                // Сессии сна за 30 дней: последняя ночь + регулярность +
+                // база ночного пульса покоя.
+                var sleepSessions = await db.SleepSessions.AsNoTracking()
+                    .Where(s => s.UserId == userId && s.EndedAt >= from)
                     .OrderByDescending(s => s.EndedAt)
-                    .FirstOrDefaultAsync();
+                    .ToListAsync();
+                var lastSleep = sleepSessions.FirstOrDefault(
+                    s => s.EndedAt >= now.AddDays(-2));
 
                 // Тренировки за 28 дней — для Strain и тренировочной нагрузки.
                 var workouts = await db.Workouts.AsNoTracking()
@@ -114,9 +142,26 @@ public static class InsightsEndpoints
                 var baselines = ComputeBaselines(byMetric, now);
                 var trends = ComputeTrends(byMetric, now);
                 var trainingLoad = ComputeTrainingLoad(workouts, now);
+                var night = ComputeNightVitals(byMetric, sleepSessions, now);
+                var stressTimeline = ComputeStressTimeline(byMetric, night, now);
 
                 var ctx = new ScoreContext(
-                    byMetric, baselines, lastSleep, workouts, now, profile);
+                    byMetric, baselines, lastSleep, workouts, now, profile, night);
+
+                // VO2max по Уту—Соренсену: 15.3 × HRmax / пульс покоя.
+                // Ночной пульс покоя точнее записей из хранилища.
+                double? vo2max = null;
+                var age = await db.Users.AsNoTracking()
+                    .Where(u => u.Id == userId)
+                    .Select(u => u.Age)
+                    .FirstOrDefaultAsync();
+                var restingHr = night.RestingHrBaseline ?? night.RestingHr ??
+                    ctx.Baseline(MetricType.RestingHeartRate)?.Avg;
+                if (restingHr is double rhr and > 25)
+                {
+                    var hrMax = age is int a ? 220.0 - a : 190.0;
+                    vo2max = Math.Round(15.3 * hrMax / rhr, 1);
+                }
                 var scores = new List<ScoreDto>();
                 void add(ScoreDto? s)
                 {
@@ -157,9 +202,51 @@ public static class InsightsEndpoints
                     recovery?.Value,
                     scores,
                     trainingLoad,
+                    night,
+                    vo2max,
+                    stressTimeline,
                     baselines,
                     trends,
                     anomalies));
+            })
+            .WithTags("Insights")
+            .RequireAuthorization();
+
+        // Недельный отчёт: тренды + тренировки этой недели против прошлой.
+        app.MapGet("/api/insights/weekly", async (
+                ClaimsPrincipal principal, AppDbContext db) =>
+            {
+                var userId = principal.GetUserId();
+                if (userId is null) return Results.Unauthorized();
+
+                var now = DateTimeOffset.UtcNow;
+                var samples = await db.Samples.AsNoTracking()
+                    .Where(s => s.UserId == userId &&
+                                s.RecordedAt >= now.AddDays(-14) &&
+                                TrackedMetrics.Contains(s.Metric))
+                    .Select(s => new Pt(s.Metric, s.Value, s.RecordedAt))
+                    .ToListAsync();
+                var byMetric = samples
+                    .GroupBy(s => s.Metric)
+                    .ToDictionary(g => g.Key,
+                        g => g.OrderBy(s => s.RecordedAt).ToList());
+
+                var workouts = await db.Workouts.AsNoTracking()
+                    .Where(w => w.UserId == userId &&
+                                w.StartedAt >= now.AddDays(-14))
+                    .Select(w => new WorkoutPt(w.StartedAt, w.EndedAt, w.EnergyKcal))
+                    .ToListAsync();
+                var thisWeek = workouts.Where(w => w.Start >= now.AddDays(-7)).ToList();
+                var lastWeek = workouts.Where(w => w.Start < now.AddDays(-7)).ToList();
+
+                return Results.Ok(new WeeklyReportDto(
+                    now.AddDays(-7),
+                    now,
+                    ComputeTrends(byMetric, now),
+                    thisWeek.Count,
+                    lastWeek.Count,
+                    Round(thisWeek.Sum(EstimateTrimp)),
+                    Round(lastWeek.Sum(EstimateTrimp))));
             })
             .WithTags("Insights")
             .RequireAuthorization();
@@ -181,7 +268,8 @@ public static class InsightsEndpoints
         SleepSession? LastSleep,
         List<WorkoutPt> Workouts,
         DateTimeOffset Now,
-        Goals Goals)
+        Goals Goals,
+        NightVitalsDto Night)
     {
         public BaselineDto? Baseline(MetricType m) =>
             Baselines.FirstOrDefault(b => b.Metric == m);
@@ -196,6 +284,116 @@ public static class InsightsEndpoints
         public double DaySum(MetricType m) => Of(m)
             .Where(p => p.RecordedAt >= Now.AddDays(-1))
             .Sum(p => p.Value);
+    }
+
+    // ===== Ночные показатели =====
+
+    /// <summary>5-й перцентиль (устойчив к выбросам, в отличие от минимума).</summary>
+    private static double? Percentile5(List<double> values)
+    {
+        if (values.Count < 5) return null;
+        var sorted = values.OrderBy(v => v).ToList();
+        return sorted[(int)(sorted.Count * 0.05)];
+    }
+
+    private static List<double> SamplesInWindow(
+        Dictionary<MetricType, List<Pt>> byMetric, MetricType metric,
+        DateTimeOffset from, DateTimeOffset to)
+    {
+        return byMetric.TryGetValue(metric, out var list)
+            ? list.Where(p => p.RecordedAt >= from && p.RecordedAt <= to)
+                .Select(p => p.Value)
+                .ToList()
+            : [];
+    }
+
+    /// <summary>
+    /// Ночные показатели: пульс покоя (5-й перцентиль пульса во сне —
+    /// точнее записей RESTING_HEART_RATE), минимум SpO₂ и число «провалов»
+    /// ниже 90%, регулярность отбоя за 14 дней.
+    /// </summary>
+    private static NightVitalsDto ComputeNightVitals(
+        Dictionary<MetricType, List<Pt>> byMetric,
+        List<SleepSession> sessions,
+        DateTimeOffset now)
+    {
+        var last = sessions.FirstOrDefault(s => s.EndedAt >= now.AddDays(-2));
+
+        double? restingHr = null;
+        double? spo2Min = null;
+        int? spo2Dips = null;
+        if (last is not null)
+        {
+            restingHr = Percentile5(SamplesInWindow(
+                byMetric, MetricType.HeartRate, last.StartedAt, last.EndedAt));
+            var spo2 = SamplesInWindow(
+                byMetric, MetricType.BloodOxygen, last.StartedAt, last.EndedAt);
+            if (spo2.Count > 0)
+            {
+                spo2Min = spo2.Min();
+                spo2Dips = spo2.Count(v => v < 90);
+            }
+        }
+
+        // База ночного пульса покоя: перцентиль по каждой ночи за 30 дней.
+        var nightly = sessions
+            .Select(s => Percentile5(SamplesInWindow(
+                byMetric, MetricType.HeartRate, s.StartedAt, s.EndedAt)))
+            .OfType<double>()
+            .ToList();
+        double? rhrBaseline = nightly.Count >= 3 ? nightly.Average() : null;
+
+        // Регулярность: σ времени отбоя за 14 дней. Минуты от 18:00,
+        // чтобы полночь не рвала распределение.
+        double? regularity = null;
+        var bedtimes = sessions
+            .Where(s => s.StartedAt >= now.AddDays(-14))
+            .Select(s =>
+            {
+                var local = s.StartedAt.ToUniversalTime();
+                var minutes = (local.Hour * 60 + local.Minute + 1440 - 18 * 60) % 1440;
+                return (double)minutes;
+            })
+            .ToList();
+        if (bedtimes.Count >= 4)
+        {
+            var avg = bedtimes.Average();
+            regularity = Math.Round(
+                Math.Sqrt(bedtimes.Sum(v => (v - avg) * (v - avg)) / bedtimes.Count), 0);
+        }
+
+        return new NightVitalsDto(
+            restingHr is double r ? Math.Round(r) : null,
+            rhrBaseline is double b ? Math.Round(b) : null,
+            spo2Min,
+            spo2Dips,
+            regularity);
+    }
+
+    /// <summary>
+    /// Почасовой стресс за последние сутки: превышение среднего пульса часа
+    /// над ночным пульсом покоя. Грубая, но честная оценка без лаборатории.
+    /// </summary>
+    private static List<StressPointDto> ComputeStressTimeline(
+        Dictionary<MetricType, List<Pt>> byMetric,
+        NightVitalsDto night,
+        DateTimeOffset now)
+    {
+        var rhr = night.RestingHrBaseline ?? night.RestingHr;
+        if (rhr is not double baseline || baseline < 25) return [];
+
+        var result = new List<StressPointDto>();
+        for (var h = 24; h >= 1; h--)
+        {
+            var to = now.AddHours(-h + 1);
+            var hr = SamplesInWindow(
+                byMetric, MetricType.HeartRate, now.AddHours(-h), to);
+            if (hr.Count == 0) continue;
+            var elevation = (hr.Average() - baseline) / baseline;
+            var stress = (int)Math.Clamp(elevation * 250, 0, 100);
+            result.Add(new StressPointDto(to, stress));
+        }
+        return result;
     }
 
     // ===== Базовые линии, тренды, нагрузка =====
@@ -326,6 +524,17 @@ public static class InsightsEndpoints
         {
             value = (int)Math.Round(100 * durationPoints);
         }
+
+        // Регулярность: стабильный отбой (±30 мин) — бонус, разброс
+        // больше двух часов — штраф (социальный джетлаг).
+        if (ctx.Night.SleepRegularityMinutes is double sigma)
+        {
+            var regularity = Clamp01(1 - (sigma - 30) / 90); // 30мин→1, 120мин→0
+            value += (int)Math.Round((regularity - 0.5) * 16);
+            factors.Add(F("Регулярность",
+                $"Разброс отбоя ±{sigma:0} мин за 14 дней", regularity - 0.5));
+        }
+
         return new ScoreDto("sleep", "Сон", Math.Clamp(value, 0, 100), factors);
     }
 

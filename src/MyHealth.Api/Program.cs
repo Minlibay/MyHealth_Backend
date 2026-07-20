@@ -11,6 +11,7 @@ using MyHealth.Api.Features.Evaluation;
 using MyHealth.Api.Features.Insights;
 using MyHealth.Api.Features.Metrics;
 using MyHealth.Api.Features.Sleep;
+using MyHealth.Api.Features.Tags;
 using MyHealth.Api.Features.User;
 using MyHealth.Api.Features.Workouts;
 
@@ -101,5 +102,6 @@ app.MapWorkoutEndpoints();
 app.MapSleepEndpoints();
 app.MapUserEndpoints();
 app.MapInsightEndpoints();
+app.MapTagEndpoints();
 
 app.Run();

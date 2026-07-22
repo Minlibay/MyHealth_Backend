@@ -9,6 +9,7 @@ using MyHealth.Api.Auth;
 using MyHealth.Api.Data;
 using MyHealth.Api.Features.Evaluation;
 using MyHealth.Api.Features.Insights;
+using MyHealth.Api.Features.Integrations;
 using MyHealth.Api.Features.Metrics;
 using MyHealth.Api.Features.Sleep;
 using MyHealth.Api.Features.Tags;
@@ -25,6 +26,12 @@ builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection(JwtSettings.SectionName));
 var jwt = builder.Configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>()
           ?? new JwtSettings();
+
+// --- Google Health API (облачный импорт данных Fitbit/Google) ---
+builder.Services.Configure<GoogleHealthSettings>(
+    builder.Configuration.GetSection(GoogleHealthSettings.SectionName));
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<GoogleHealthService>();
 
 // --- База данных (PostgreSQL) ---
 builder.Services.AddDbContext<AppDbContext>(opt =>
@@ -103,5 +110,6 @@ app.MapSleepEndpoints();
 app.MapUserEndpoints();
 app.MapInsightEndpoints();
 app.MapTagEndpoints();
+app.MapGoogleHealthEndpoints();
 
 app.Run();

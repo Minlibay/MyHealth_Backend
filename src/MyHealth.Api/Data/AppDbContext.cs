@@ -11,6 +11,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<SleepSession> SleepSessions => Set<SleepSession>();
     public DbSet<TagEvent> TagEvents => Set<TagEvent>();
+    public DbSet<GoogleHealthConnection> GoogleHealthConnections =>
+        Set<GoogleHealthConnection>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
@@ -53,6 +55,17 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             e.HasOne(t => t.User)
                 .WithMany()
                 .HasForeignKey(t => t.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        b.Entity<GoogleHealthConnection>(e =>
+        {
+            // Одно подключение на пользователя.
+            e.HasIndex(c => c.UserId).IsUnique();
+            e.Property(c => c.Scopes).HasMaxLength(1024);
+            e.HasOne(c => c.User)
+                .WithMany()
+                .HasForeignKey(c => c.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
 

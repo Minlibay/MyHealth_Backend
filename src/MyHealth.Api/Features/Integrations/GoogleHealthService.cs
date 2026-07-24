@@ -147,8 +147,10 @@ public class GoogleHealthService(
         JsonElement? rawSample = null;
         var rawTotal = 0;
 
-        // Поле фильтра — dataType в snake_case (steps, heart_rate, ...).
-        var field = dataType.Replace('-', '_');
+        // Член фильтра — dataType в camelCase (steps, heartRate,
+        // dailyRestingHeartRate...), как имена полей v4. snake_case здесь
+        // отвергается (INVALID_DATA_POINT_FILTER_DATA_TYPE_MEMBER).
+        var field = ToCamelCase(dataType);
         var filter =
             $"{field}.interval.start_time >= \"{from.UtcDateTime:o}\" AND " +
             $"{field}.interval.start_time < \"{to.UtcDateTime:o}\"";
@@ -224,6 +226,17 @@ public class GoogleHealthService(
 
     private static string Truncate(string s, int max) =>
         s.Length <= max ? s : s[..max];
+
+    /// <summary>"daily-resting-heart-rate" → "dailyRestingHeartRate".</summary>
+    private static string ToCamelCase(string hyphenated)
+    {
+        var parts = hyphenated.Split('-', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 0) return hyphenated;
+        var sb = new System.Text.StringBuilder(parts[0]);
+        for (var i = 1; i < parts.Length; i++)
+            sb.Append(char.ToUpperInvariant(parts[i][0])).Append(parts[i][1..]);
+        return sb.ToString();
+    }
 
     /// <summary>Приведение единиц Google к нашим (метры→км, сон сек/мин→часы).</summary>
     private static double Convert(MetricType metric, double v) => metric switch

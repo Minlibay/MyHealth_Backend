@@ -169,9 +169,16 @@ public class GoogleHealthService(
             if (windowEnd > to) windowEnd = to;
 
             // Поле времени зависит от вида данных (AIP-160): у сэмплов —
-            // sample_time, у суточных — date, у интервальных — interval.
+            // sample_time, у суточных — date, у сна — interval.end_time,
+            // у интервальных — interval.start_time.
             string filter;
-            if (dataType.StartsWith("daily-"))
+            if (dataType == "sleep")
+            {
+                filter =
+                    $"{field}.interval.end_time >= \"{windowStart.UtcDateTime:o}\" AND " +
+                    $"{field}.interval.end_time < \"{windowEnd.UtcDateTime:o}\"";
+            }
+            else if (dataType.StartsWith("daily-"))
             {
                 filter =
                     $"{field}.date >= \"{windowStart.UtcDateTime:yyyy-MM-dd}\" AND " +
@@ -207,7 +214,7 @@ public class GoogleHealthService(
                         $"{dataType} [{(int)res.StatusCode}]: {Truncate(errBody, 300)}");
                 }
                 var json = await res.Content.ReadFromJsonAsync<JsonElement>(ct);
-                var (extracted, seenRaw, sample) = ExtractPointsDiag(json);
+                var (extracted, seenRaw, sample) = ExtractPointsDiag(json, field);
                 points.AddRange(extracted);
                 rawTotal += seenRaw;
                 rawSample ??= sample;
@@ -308,7 +315,7 @@ public class GoogleHealthService(
     /// записей и образец первой записи (для отладки формата v4).
     /// </summary>
     private static (List<(DateTimeOffset At, double Value)> Points, int RawCount,
-        JsonElement? Sample) ExtractPointsDiag(JsonElement root)
+        JsonElement? Sample) ExtractPointsDiag(JsonElement root, string field)
     {
         var result = new List<(DateTimeOffset, double)>();
 
@@ -332,11 +339,50 @@ public class GoogleHealthService(
         {
             raw++;
             sample ??= el;
-            var value = ExtractValue(el);
-            var at = ExtractTime(el);
+            // Значение и время вложены в поле с именем типа (напр. "weight").
+            var payload = el.TryGetProperty(field, out var p) &&
+                          p.ValueKind == JsonValueKind.Object
+                ? p
+                : el;
+            var at = ExtractTime(payload) ?? ExtractTime(el);
+            var value = ExtractNumericLeaf(payload, 0);
             if (value is double v && at is DateTimeOffset t) result.Add((t, v));
         }
         return (result, raw, sample);
+    }
+
+    // Ключи, которые не являются значением показателя (время/источник/мета).
+    private static readonly HashSet<string> _nonValueKeys =
+    [
+        "sampleTime", "interval", "date", "dataSource", "origin", "name",
+        "startUtcOffset", "endUtcOffset", "utcOffset",
+    ];
+
+    /// <summary>
+    /// Первое числовое значение в объекте, кроме служебных полей (время,
+    /// смещения, источник). Так достаём величину показателя из вложенной
+    /// структуры v4, не зная точного имени поля значения.
+    /// </summary>
+    private static double? ExtractNumericLeaf(JsonElement el, int depth)
+    {
+        if (depth > 4) return null;
+        switch (el.ValueKind)
+        {
+            case JsonValueKind.Number:
+                return el.GetDouble();
+            case JsonValueKind.Object:
+                foreach (var prop in el.EnumerateObject())
+                {
+                    if (_nonValueKeys.Contains(prop.Name)) continue;
+                    if (prop.Name.Contains("Time") || prop.Name.Contains("time"))
+                        continue;
+                    var v = ExtractNumericLeaf(prop.Value, depth + 1);
+                    if (v is not null) return v;
+                }
+                return null;
+            default:
+                return null;
+        }
     }
 
     private static double? ExtractValue(JsonElement el)

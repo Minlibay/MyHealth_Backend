@@ -154,55 +154,67 @@ public class GoogleHealthService(
         JsonElement? rawSample = null;
         var rawTotal = 0;
 
-        // Член фильтра — dataType в camelCase; поле времени зависит от вида
-        // данных (AIP-160). У сэмплов — sample_time, у суточных — date,
-        // у интервальных — interval.start_time.
         var field = ToCamelCase(dataType);
-        string filter;
-        if (dataType.StartsWith("daily-"))
-        {
-            filter =
-                $"{field}.date >= \"{from.UtcDateTime:yyyy-MM-dd}\" AND " +
-                $"{field}.date < \"{to.UtcDateTime:yyyy-MM-dd}\"";
-        }
-        else if (_sampleTypes.Contains(dataType))
-        {
-            filter =
-                $"{field}.sample_time.physical_time >= \"{from.UtcDateTime:o}\" AND " +
-                $"{field}.sample_time.physical_time < \"{to.UtcDateTime:o}\"";
-        }
-        else
-        {
-            filter =
-                $"{field}.interval.start_time >= \"{from.UtcDateTime:o}\" AND " +
-                $"{field}.interval.start_time < \"{to.UtcDateTime:o}\"";
-        }
+        // Высокочастотные «сырые» типы (пульс) API отдаёт только узким
+        // окном — иначе DATA_TYPE_RESTRICTION. Тянем окнами.
+        var windowDays = dataType == "heart-rate" ? 1 : 14;
 
-        string? pageToken = null;
-        var pages = 0;
-        do
+        var windowStart = from;
+        while (windowStart < to)
         {
-            var url = $"{ApiBase}/{dataType}/dataPoints" +
-                      $"?filter={Uri.EscapeDataString(filter)}&pageSize=1000" +
-                      (pageToken is null ? "" : $"&pageToken={Uri.EscapeDataString(pageToken)}");
-            var res = await http.GetAsync(url, ct);
-            if (!res.IsSuccessStatusCode)
+            var windowEnd = windowStart.AddDays(windowDays);
+            if (windowEnd > to) windowEnd = to;
+
+            // Поле времени зависит от вида данных (AIP-160): у сэмплов —
+            // sample_time, у суточных — date, у интервальных — interval.
+            string filter;
+            if (dataType.StartsWith("daily-"))
             {
-                // 404 — тип недоступен у пользователя; молча пропускаем.
-                if (res.StatusCode == System.Net.HttpStatusCode.NotFound) return 0;
-                var errBody = await res.Content.ReadAsStringAsync(ct);
-                throw new HttpRequestException(
-                    $"{dataType} [{(int)res.StatusCode}]: {Truncate(errBody, 300)}");
+                filter =
+                    $"{field}.date >= \"{windowStart.UtcDateTime:yyyy-MM-dd}\" AND " +
+                    $"{field}.date < \"{windowEnd.UtcDateTime:yyyy-MM-dd}\"";
             }
-            var json = await res.Content.ReadFromJsonAsync<JsonElement>(ct);
-            var (extracted, seenRaw, sample) = ExtractPointsDiag(json);
-            points.AddRange(extracted);
-            rawTotal += seenRaw;
-            rawSample ??= sample;
-            pageToken = json.TryGetProperty("nextPageToken", out var np)
-                ? np.GetString()
-                : null;
-        } while (!string.IsNullOrEmpty(pageToken) && ++pages < 20);
+            else if (_sampleTypes.Contains(dataType))
+            {
+                filter =
+                    $"{field}.sample_time.physical_time >= \"{windowStart.UtcDateTime:o}\" AND " +
+                    $"{field}.sample_time.physical_time < \"{windowEnd.UtcDateTime:o}\"";
+            }
+            else
+            {
+                filter =
+                    $"{field}.interval.start_time >= \"{windowStart.UtcDateTime:o}\" AND " +
+                    $"{field}.interval.start_time < \"{windowEnd.UtcDateTime:o}\"";
+            }
+
+            string? pageToken = null;
+            var pages = 0;
+            do
+            {
+                var url = $"{ApiBase}/{dataType}/dataPoints" +
+                          $"?filter={Uri.EscapeDataString(filter)}&pageSize=1000" +
+                          (pageToken is null ? "" : $"&pageToken={Uri.EscapeDataString(pageToken)}");
+                var res = await http.GetAsync(url, ct);
+                if (!res.IsSuccessStatusCode)
+                {
+                    // 404 — тип недоступен у пользователя; молча пропускаем.
+                    if (res.StatusCode == System.Net.HttpStatusCode.NotFound) return 0;
+                    var errBody = await res.Content.ReadAsStringAsync(ct);
+                    throw new HttpRequestException(
+                        $"{dataType} [{(int)res.StatusCode}]: {Truncate(errBody, 300)}");
+                }
+                var json = await res.Content.ReadFromJsonAsync<JsonElement>(ct);
+                var (extracted, seenRaw, sample) = ExtractPointsDiag(json);
+                points.AddRange(extracted);
+                rawTotal += seenRaw;
+                rawSample ??= sample;
+                pageToken = json.TryGetProperty("nextPageToken", out var np)
+                    ? np.GetString()
+                    : null;
+            } while (!string.IsNullOrEmpty(pageToken) && ++pages < 20);
+
+            windowStart = windowEnd;
+        }
 
         // Запрос прошёл, точки есть, но значение не распозналось — сохраняем
         // образец JSON, чтобы поправить парсинг под реальный формат.

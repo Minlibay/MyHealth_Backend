@@ -110,33 +110,36 @@ public class GoogleHealthService(
         var now = DateTimeOffset.UtcNow;
         var from = now.AddDays(-Math.Clamp(days, 1, 30));
         var inserted = 0;
-        var errors = new List<string>();
-        string? firstErrorDetail = null;
+        var errorCount = 0;
+        // Компактная сводка по каждому типу — за один синк видно всю картину.
+        var report = new List<string>();
+        // Первый образец «пришло, но не распознано» — чтобы поправить парсинг.
+        string? parseSample = null;
 
         foreach (var (dataType, metric) in Mappings)
         {
             try
             {
-                inserted += await SyncDataTypeAsync(
+                var n = await SyncDataTypeAsync(
                     db, http, conn.UserId, dataType, metric, from, now, ct);
+                inserted += n;
+                report.Add($"{dataType}:{n}");
             }
             catch (Exception e)
             {
                 logger.LogWarning(e, "Google Health sync failed for {DataType}", dataType);
-                errors.Add(dataType);
-                // Сохраняем текст первой ошибки Google — по нему видно причину
-                // (неверное имя поля/метод/скоуп) и можно чинить прицельно.
-                firstErrorDetail ??= e.Message;
+                errorCount++;
+                report.Add($"{dataType}:{ShortCode(e.Message)}");
+                if (e.Message.Contains("не распознано")) parseSample ??= e.Message;
             }
         }
 
         await db.SaveChangesAsync(ct);
         conn.LastSyncAt = now;
-        conn.LastError = errors.Count == 0
+        conn.LastError = errorCount == 0
             ? null
-            : firstErrorDetail is null
-                ? $"Не пришли: {string.Join(", ", errors)}"
-                : $"Ошибка Google ({errors.Count} типов). Детали: {Truncate(firstErrorDetail, 400)}";
+            : Truncate(string.Join("  ", report) +
+                (parseSample is null ? "" : $"\n{parseSample}"), 1000);
         await db.SaveChangesAsync(ct);
         return inserted;
     }
@@ -261,6 +264,20 @@ public class GoogleHealthService(
 
     private static string Truncate(string s, int max) =>
         s.Length <= max ? s : s[..max];
+
+    /// <summary>Короткий код причины из текста ошибки Google (для сводки).</summary>
+    private static string ShortCode(string message)
+    {
+        if (message.Contains("RESTRICTION")) return "ERR:RESTRICTION";
+        if (message.Contains("MEMBER")) return "ERR:MEMBER";
+        if (message.Contains("Unknown name")) return "ERR:FIELD";
+        if (message.Contains("PERMISSION") || message.Contains("[403")) return "ERR:PERM";
+        if (message.Contains("не распознано")) return "ERR:PARSE";
+        if (message.Contains("[404")) return "ERR:404";
+        if (message.Contains("[400")) return "ERR:400";
+        if (message.Contains("[401")) return "ERR:401";
+        return "ERR";
+    }
 
     /// <summary>"daily-resting-heart-rate" → "dailyRestingHeartRate".</summary>
     private static string ToCamelCase(string hyphenated)

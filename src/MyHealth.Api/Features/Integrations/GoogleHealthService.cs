@@ -110,10 +110,11 @@ public class GoogleHealthService(
         var now = DateTimeOffset.UtcNow;
         var from = now.AddDays(-Math.Clamp(days, 1, 30));
         var inserted = 0;
-        var errorCount = 0;
-        // Компактная сводка по каждому типу — за один синк видно всю картину.
-        var report = new List<string>();
-        // Первый образец «пришло, но не распознано» — чтобы поправить парсинг.
+        // Сводка: импортированные типы, реальные ошибки и типы, закрытые
+        // Google (по-типовый доступ приложения / верификация).
+        var imported = new List<string>();
+        var failed = new List<string>();
+        var restricted = new List<string>();
         string? parseSample = null;
 
         foreach (var (dataType, metric) in Mappings)
@@ -123,23 +124,36 @@ public class GoogleHealthService(
                 var n = await SyncDataTypeAsync(
                     db, http, conn.UserId, dataType, metric, from, now, ct);
                 inserted += n;
-                report.Add($"{dataType}:{n}");
+                if (n > 0) imported.Add($"{dataType}:{n}");
             }
             catch (Exception e)
             {
                 logger.LogWarning(e, "Google Health sync failed for {DataType}", dataType);
-                errorCount++;
-                report.Add($"{dataType}:{ShortCode(e.Message)}");
-                if (e.Message.Contains("не распознано")) parseSample ??= e.Message;
+                if (e.Message.Contains("RESTRICTION"))
+                {
+                    restricted.Add(dataType);
+                }
+                else
+                {
+                    failed.Add($"{dataType}:{ShortCode(e.Message)}");
+                    if (e.Message.Contains("не распознано")) parseSample ??= e.Message;
+                }
             }
         }
 
         await db.SaveChangesAsync(ct);
         conn.LastSyncAt = now;
-        conn.LastError = errorCount == 0
+        var lines = new List<string>();
+        if (imported.Count > 0) lines.Add($"Загружено: {string.Join(", ", imported)}");
+        if (restricted.Count > 0)
+            lines.Add(
+                $"Закрыто Google до одобрения доступа к типам данных " +
+                $"(консоль Google Health API / верификация): {string.Join(", ", restricted)}");
+        if (failed.Count > 0) lines.Add($"Ошибки: {string.Join(", ", failed)}");
+        if (parseSample is not null) lines.Add(parseSample);
+        conn.LastError = failed.Count == 0 && restricted.Count == 0
             ? null
-            : Truncate(string.Join("  ", report) +
-                (parseSample is null ? "" : $"\n{parseSample}"), 1000);
+            : Truncate(string.Join("\n", lines), 1000);
         await db.SaveChangesAsync(ct);
         return inserted;
     }
@@ -297,11 +311,15 @@ public class GoogleHealthService(
         return sb.ToString();
     }
 
-    /// <summary>Приведение единиц Google к нашим (метры→км, сон сек/мин→часы).</summary>
+    /// <summary>Приведение единиц Google к нашим (метры→км/см, сон→часы).</summary>
     private static double Convert(MetricType metric, double v) => metric switch
     {
         MetricType.Distance => v > 100 ? v / 1000 : v, // метры → км
         MetricType.Sleep => v > 120 ? v / 3600 : v / 60, // сек/мин → часы
+        // Рост: метры → см; миллиметры → см.
+        MetricType.Height => v < 3 ? v * 100 : v > 300 ? v / 10 : v,
+        // Вес: граммы → кг.
+        MetricType.Weight => v > 1000 ? v / 1000 : v,
         _ => v,
     };
 
@@ -355,13 +373,14 @@ public class GoogleHealthService(
     private static readonly HashSet<string> _nonValueKeys =
     [
         "sampleTime", "interval", "date", "dataSource", "origin", "name",
-        "startUtcOffset", "endUtcOffset", "utcOffset",
+        "id", "startUtcOffset", "endUtcOffset", "utcOffset",
     ];
 
     /// <summary>
     /// Первое числовое значение в объекте, кроме служебных полей (время,
     /// смещения, источник). Так достаём величину показателя из вложенной
-    /// структуры v4, не зная точного имени поля значения.
+    /// структуры v4, не зная точного имени поля значения. Числа-строки
+    /// тоже принимаем — протобуф кодирует int64 строкой.
     /// </summary>
     private static double? ExtractNumericLeaf(JsonElement el, int depth)
     {
@@ -370,6 +389,14 @@ public class GoogleHealthService(
         {
             case JsonValueKind.Number:
                 return el.GetDouble();
+            case JsonValueKind.String:
+                return double.TryParse(
+                    el.GetString(),
+                    System.Globalization.NumberStyles.Float,
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    out var parsed)
+                    ? parsed
+                    : null;
             case JsonValueKind.Object:
                 foreach (var prop in el.EnumerateObject())
                 {

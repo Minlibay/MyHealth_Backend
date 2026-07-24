@@ -135,41 +135,57 @@ public class GoogleHealthService(
     }
 
     /// <summary>
-    /// Один тип данных: окнами по 14 дней вызываем dailyRollUp, парсим
-    /// точки и добавляем недостающие HealthSample (идемпотентно по ClientId).
+    /// Один тип данных: GET-метод list с фильтром по интервалу
+    /// (AIP-160), с пагинацией. Парсим точки и добавляем недостающие
+    /// HealthSample (идемпотентно по ClientId).
     /// </summary>
     private async Task<int> SyncDataTypeAsync(
         AppDbContext db, HttpClient http, Guid userId, string dataType,
         MetricType metric, DateTimeOffset from, DateTimeOffset to, CancellationToken ct)
     {
         var points = new List<(DateTimeOffset At, double Value)>();
+        JsonElement? rawSample = null;
+        var rawTotal = 0;
 
-        // API отдаёт максимум 14 дней за запрос.
-        var windowStart = from;
-        while (windowStart < to)
+        // Поле фильтра — dataType в snake_case (steps, heart_rate, ...).
+        var field = dataType.Replace('-', '_');
+        var filter =
+            $"{field}.interval.start_time >= \"{from.UtcDateTime:o}\" AND " +
+            $"{field}.interval.start_time < \"{to.UtcDateTime:o}\"";
+
+        string? pageToken = null;
+        var pages = 0;
+        do
         {
-            var windowEnd = windowStart.AddDays(14);
-            if (windowEnd > to) windowEnd = to;
-
-            var url = $"{ApiBase}/{dataType}/dataPoints:dailyRollUp";
-            var body = new
-            {
-                startTime = windowStart.UtcDateTime.ToString("o"),
-                endTime = windowEnd.UtcDateTime.ToString("o"),
-            };
-            var res = await http.PostAsJsonAsync(url, body, ct);
+            var url = $"{ApiBase}/{dataType}/dataPoints" +
+                      $"?filter={Uri.EscapeDataString(filter)}&pageSize=1000" +
+                      (pageToken is null ? "" : $"&pageToken={Uri.EscapeDataString(pageToken)}");
+            var res = await http.GetAsync(url, ct);
             if (!res.IsSuccessStatusCode)
             {
                 // 404 — тип недоступен у пользователя; молча пропускаем.
                 if (res.StatusCode == System.Net.HttpStatusCode.NotFound) return 0;
-                // Тело ответа Google несёт точную причину — сохраняем его.
                 var errBody = await res.Content.ReadAsStringAsync(ct);
                 throw new HttpRequestException(
                     $"{dataType} [{(int)res.StatusCode}]: {Truncate(errBody, 300)}");
             }
             var json = await res.Content.ReadFromJsonAsync<JsonElement>(ct);
-            points.AddRange(ExtractPoints(json));
-            windowStart = windowEnd;
+            var (extracted, seenRaw, sample) = ExtractPointsDiag(json);
+            points.AddRange(extracted);
+            rawTotal += seenRaw;
+            rawSample ??= sample;
+            pageToken = json.TryGetProperty("nextPageToken", out var np)
+                ? np.GetString()
+                : null;
+        } while (!string.IsNullOrEmpty(pageToken) && ++pages < 20);
+
+        // Запрос прошёл, точки есть, но значение не распозналось — сохраняем
+        // образец JSON, чтобы поправить парсинг под реальный формат.
+        if (points.Count == 0 && rawTotal > 0 && rawSample is JsonElement s)
+        {
+            throw new HttpRequestException(
+                $"{dataType}: получено {rawTotal}, но не распознано. Пример: " +
+                Truncate(s.GetRawText(), 300));
         }
         if (points.Count == 0) return 0;
 
@@ -222,8 +238,12 @@ public class GoogleHealthService(
     /// числовое значение и дату. Имена полей v4 подтверждаются на живых
     /// данных; здесь перебор частых вариантов.
     /// </summary>
-    private static IEnumerable<(DateTimeOffset At, double Value)> ExtractPoints(
-        JsonElement root)
+    /// <summary>
+    /// Разбор + диагностика: возвращает распознанные точки, число сырых
+    /// записей и образец первой записи (для отладки формата v4).
+    /// </summary>
+    private static (List<(DateTimeOffset At, double Value)> Points, int RawCount,
+        JsonElement? Sample) ExtractPointsDiag(JsonElement root)
     {
         var result = new List<(DateTimeOffset, double)>();
 
@@ -236,24 +256,32 @@ public class GoogleHealthService(
             array = pts;
         else if (root.TryGetProperty("rollUps", out var ru))
             array = ru;
+        else if (root.TryGetProperty("dailyRollUps", out var dru))
+            array = dru;
         else
-            return result;
+            return (result, 0, null);
 
+        var raw = 0;
+        JsonElement? sample = null;
         foreach (var el in array.EnumerateArray())
         {
+            raw++;
+            sample ??= el;
             var value = ExtractValue(el);
             var at = ExtractTime(el);
             if (value is double v && at is DateTimeOffset t) result.Add((t, v));
         }
-        return result;
+        return (result, raw, sample);
     }
 
     private static double? ExtractValue(JsonElement el)
     {
         foreach (var key in new[]
                  {
-                     "value", "total", "average", "avg", "count", "sum",
-                     "fpVal", "intVal", "doubleValue"
+                     "value", "total", "average", "avg", "mean", "count", "sum",
+                     "fpVal", "intVal", "doubleValue", "quantity", "amount",
+                     "bpm", "steps", "meters", "kilocalories", "kcal",
+                     "celsius", "percentage", "milliseconds"
                  })
         {
             if (el.TryGetProperty(key, out var v))
@@ -267,10 +295,17 @@ public class GoogleHealthService(
 
     private static DateTimeOffset? ExtractTime(JsonElement el)
     {
+        // Точка может нести интервал вложенным объектом.
+        if (el.TryGetProperty("interval", out var interval) &&
+            interval.ValueKind == JsonValueKind.Object)
+        {
+            var t = ExtractTime(interval);
+            if (t is not null) return t;
+        }
         foreach (var key in new[]
                  {
-                     "startTime", "date", "startDate", "civilStartTime",
-                     "endTime", "time"
+                     "startTime", "start_time", "date", "startDate",
+                     "civilStartTime", "endTime", "end_time", "time"
                  })
         {
             if (el.TryGetProperty(key, out var v) &&

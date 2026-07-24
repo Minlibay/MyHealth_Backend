@@ -35,6 +35,13 @@ public class GoogleHealthService(
     private const string TokenEndpoint = "https://oauth2.googleapis.com/token";
     private const string ApiBase = "https://health.googleapis.com/v4/users/me/dataTypes";
 
+    /// <summary>Точечные (sample) типы — фильтруются по sample_time.</summary>
+    private static readonly HashSet<string> _sampleTypes =
+    [
+        "heart-rate", "weight", "body-fat", "height", "blood-glucose",
+        "core-body-temperature",
+    ];
+
     /// <summary>dataType Google Health API → (наша метрика, единица).</summary>
     private static readonly (string DataType, MetricType Metric)[] Mappings =
     [
@@ -147,13 +154,29 @@ public class GoogleHealthService(
         JsonElement? rawSample = null;
         var rawTotal = 0;
 
-        // Член фильтра — dataType в camelCase (steps, heartRate,
-        // dailyRestingHeartRate...), как имена полей v4. snake_case здесь
-        // отвергается (INVALID_DATA_POINT_FILTER_DATA_TYPE_MEMBER).
+        // Член фильтра — dataType в camelCase; поле времени зависит от вида
+        // данных (AIP-160). У сэмплов — sample_time, у суточных — date,
+        // у интервальных — interval.start_time.
         var field = ToCamelCase(dataType);
-        var filter =
-            $"{field}.interval.start_time >= \"{from.UtcDateTime:o}\" AND " +
-            $"{field}.interval.start_time < \"{to.UtcDateTime:o}\"";
+        string filter;
+        if (dataType.StartsWith("daily-"))
+        {
+            filter =
+                $"{field}.date >= \"{from.UtcDateTime:yyyy-MM-dd}\" AND " +
+                $"{field}.date < \"{to.UtcDateTime:yyyy-MM-dd}\"";
+        }
+        else if (_sampleTypes.Contains(dataType))
+        {
+            filter =
+                $"{field}.sample_time.physical_time >= \"{from.UtcDateTime:o}\" AND " +
+                $"{field}.sample_time.physical_time < \"{to.UtcDateTime:o}\"";
+        }
+        else
+        {
+            filter =
+                $"{field}.interval.start_time >= \"{from.UtcDateTime:o}\" AND " +
+                $"{field}.interval.start_time < \"{to.UtcDateTime:o}\"";
+        }
 
         string? pageToken = null;
         var pages = 0;
@@ -308,17 +331,22 @@ public class GoogleHealthService(
 
     private static DateTimeOffset? ExtractTime(JsonElement el)
     {
-        // Точка может нести интервал вложенным объектом.
-        if (el.TryGetProperty("interval", out var interval) &&
-            interval.ValueKind == JsonValueKind.Object)
+        // Время может быть вложено: interval (интервальные) или
+        // sampleTime (точечные).
+        foreach (var nested in new[] {"interval", "sampleTime", "sample_time"})
         {
-            var t = ExtractTime(interval);
-            if (t is not null) return t;
+            if (el.TryGetProperty(nested, out var obj) &&
+                obj.ValueKind == JsonValueKind.Object)
+            {
+                var t = ExtractTime(obj);
+                if (t is not null) return t;
+            }
         }
         foreach (var key in new[]
                  {
-                     "startTime", "start_time", "date", "startDate",
-                     "civilStartTime", "endTime", "end_time", "time"
+                     "startTime", "start_time", "physicalTime", "physical_time",
+                     "date", "startDate", "civilStartTime", "endTime",
+                     "end_time", "time", "civilTime"
                  })
         {
             if (el.TryGetProperty(key, out var v) &&

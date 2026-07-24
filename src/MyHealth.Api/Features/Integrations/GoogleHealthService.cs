@@ -104,6 +104,7 @@ public class GoogleHealthService(
         var from = now.AddDays(-Math.Clamp(days, 1, 30));
         var inserted = 0;
         var errors = new List<string>();
+        string? firstErrorDetail = null;
 
         foreach (var (dataType, metric) in Mappings)
         {
@@ -116,12 +117,19 @@ public class GoogleHealthService(
             {
                 logger.LogWarning(e, "Google Health sync failed for {DataType}", dataType);
                 errors.Add(dataType);
+                // Сохраняем текст первой ошибки Google — по нему видно причину
+                // (неверное имя поля/метод/скоуп) и можно чинить прицельно.
+                firstErrorDetail ??= e.Message;
             }
         }
 
         await db.SaveChangesAsync(ct);
         conn.LastSyncAt = now;
-        conn.LastError = errors.Count == 0 ? null : $"Не пришли: {string.Join(", ", errors)}";
+        conn.LastError = errors.Count == 0
+            ? null
+            : firstErrorDetail is null
+                ? $"Не пришли: {string.Join(", ", errors)}"
+                : $"Ошибка Google ({errors.Count} типов). Детали: {Truncate(firstErrorDetail, 400)}";
         await db.SaveChangesAsync(ct);
         return inserted;
     }
@@ -154,8 +162,10 @@ public class GoogleHealthService(
             {
                 // 404 — тип недоступен у пользователя; молча пропускаем.
                 if (res.StatusCode == System.Net.HttpStatusCode.NotFound) return 0;
+                // Тело ответа Google несёт точную причину — сохраняем его.
+                var errBody = await res.Content.ReadAsStringAsync(ct);
                 throw new HttpRequestException(
-                    $"{dataType}: {(int)res.StatusCode}");
+                    $"{dataType} [{(int)res.StatusCode}]: {Truncate(errBody, 300)}");
             }
             var json = await res.Content.ReadFromJsonAsync<JsonElement>(ct);
             points.AddRange(ExtractPoints(json));
@@ -195,6 +205,9 @@ public class GoogleHealthService(
 
     private static string ClientId(string dataType, DateTimeOffset at) =>
         $"gh-{dataType}-{at.ToUniversalTime():yyyy-MM-ddTHH:mm:ssZ}";
+
+    private static string Truncate(string s, int max) =>
+        s.Length <= max ? s : s[..max];
 
     /// <summary>Приведение единиц Google к нашим (метры→км, сон сек/мин→часы).</summary>
     private static double Convert(MetricType metric, double v) => metric switch

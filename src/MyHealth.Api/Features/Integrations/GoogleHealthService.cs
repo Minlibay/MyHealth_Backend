@@ -418,7 +418,9 @@ public class GoogleHealthService(
     private static double Convert(MetricType metric, double v) => metric switch
     {
         MetricType.Distance => v > 100 ? v / 1000 : v, // метры → км
-        MetricType.Sleep => v > 120 ? v / 3600 : v / 60, // сек/мин → часы
+        // Сон уже считается в часах из интервала; на всякий случай
+        // распознаём секунды (>1440) и минуты (>24).
+        MetricType.Sleep => v > 1440 ? v / 3600 : v > 24 ? v / 60 : v,
         MetricType.Height => v < 3 ? v * 100 : v, // метры → см
         _ => v,
     };
@@ -483,7 +485,11 @@ public class GoogleHealthService(
                 ? p
                 : el;
             var at = ExtractTime(payload) ?? ExtractTime(el);
-            var value = ExtractValueWithUnit(payload);
+            // Сон приходит интервалом — длительность считаем из начала и
+            // конца, а не из случайного числового поля.
+            var value = field == "sleep"
+                ? ExtractDurationHours(payload)
+                : ExtractValueWithUnit(payload);
             if (value is double v && at is DateTimeOffset t) result.Add((t, v));
         }
         return (result, raw, sample);
@@ -520,6 +526,37 @@ public class GoogleHealthService(
         ("percent", 1), ("milliseconds", 1), ("count", 1), ("steps", 1),
         ("breathsPerMinute", 1), ("millimolesPerLiter", 1),
     ];
+
+    /// <summary>
+    /// Длительность в часах из интервала (start/end) — для сна и других
+    /// интервальных типов, где величина не хранится числом.
+    /// </summary>
+    private static double? ExtractDurationHours(JsonElement el)
+    {
+        if (!el.TryGetProperty("interval", out var interval) ||
+            interval.ValueKind != JsonValueKind.Object)
+        {
+            return null;
+        }
+
+        DateTimeOffset? Read(params string[] keys)
+        {
+            foreach (var k in keys)
+            {
+                if (interval.TryGetProperty(k, out var v) &&
+                    v.ValueKind == JsonValueKind.String &&
+                    DateTimeOffset.TryParse(v.GetString(), out var dt))
+                    return dt;
+            }
+            return null;
+        }
+
+        var start = Read("startTime", "start_time");
+        var end = Read("endTime", "end_time");
+        if (start is null || end is null) return null;
+        var hours = (end.Value - start.Value).TotalHours;
+        return hours > 0 ? Math.Round(hours, 2) : null;
+    }
 
     /// <summary>
     /// Значение с учётом единицы: ищем поле, названное единицей измерения,

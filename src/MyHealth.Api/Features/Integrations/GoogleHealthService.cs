@@ -63,6 +63,38 @@ public class GoogleHealthService(
         ("core-body-temperature", MetricType.BodyTemperature),
     ];
 
+    /// <summary>
+    /// Реально выданные токену скоупы (Google tokeninfo). Нужны, чтобы
+    /// отличить «нет прав в токене» от «тип закрыт для приложения»:
+    /// после одобрения новых типов старый refresh-токен прав не получает —
+    /// требуется переподключение аккаунта.
+    /// </summary>
+    private async Task<string?> GetGrantedScopesAsync(
+        string accessToken, CancellationToken ct)
+    {
+        try
+        {
+            var http = httpFactory.CreateClient();
+            var res = await http.GetAsync(
+                $"https://oauth2.googleapis.com/tokeninfo?access_token={accessToken}", ct);
+            if (!res.IsSuccessStatusCode) return null;
+            var json = await res.Content.ReadFromJsonAsync<JsonElement>(ct);
+            if (!json.TryGetProperty("scope", out var scope)) return null;
+            // Оставляем только короткие имена googlehealth-скоупов.
+            var names = (scope.GetString() ?? "")
+                .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s.Contains("googlehealth.")
+                    ? s[(s.IndexOf("googlehealth.", StringComparison.Ordinal) + 13)..]
+                    : s)
+                .Where(s => !s.StartsWith("http"));
+            return string.Join(", ", names);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     /// <summary>Обменять refresh-токен на короткоживущий access-токен.</summary>
     public async Task<string?> GetAccessTokenAsync(string refreshToken, CancellationToken ct)
     {
@@ -146,9 +178,15 @@ public class GoogleHealthService(
         var lines = new List<string>();
         if (imported.Count > 0) lines.Add($"Загружено: {string.Join(", ", imported)}");
         if (restricted.Count > 0)
-            lines.Add(
-                $"Закрыто Google до одобрения доступа к типам данных " +
-                $"(консоль Google Health API / верификация): {string.Join(", ", restricted)}");
+        {
+            var scopes = await GetGrantedScopesAsync(accessToken, ct);
+            lines.Add($"Закрыто Google: {string.Join(", ", restricted)}");
+            lines.Add(scopes is null
+                ? "Права токена определить не удалось."
+                : $"Права текущего токена: {scopes}. Если нужных прав нет — " +
+                  "нажмите «Отключить» и подключитесь заново (после одобрения " +
+                  "новых типов старый токен прав не получает).");
+        }
         if (failed.Count > 0) lines.Add($"Ошибки: {string.Join(", ", failed)}");
         if (parseSample is not null) lines.Add(parseSample);
         conn.LastError = failed.Count == 0 && restricted.Count == 0

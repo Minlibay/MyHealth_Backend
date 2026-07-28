@@ -279,6 +279,10 @@ public class GoogleHealthService(
             var candidates = FilterCandidates(dataType, field);
             string? filter = null;
             string? lastErr = null;
+            // Принятый, но пустой вариант держим как запасной: возможно,
+            // другой вариант фильтра реально отдаст записи.
+            string? emptyFilter = null;
+            string? emptyName = null;
             foreach (var (name, build) in candidates)
             {
                 var probe = build(windowStart, windowEnd);
@@ -289,12 +293,25 @@ public class GoogleHealthService(
                 var probeRes = await http.GetAsync(probeUrl, ct);
                 if (probeRes.IsSuccessStatusCode)
                 {
-                    filter = probe;
-                    usedFilter = name;
-                    break;
+                    var probeJson = await probeRes.Content.ReadFromJsonAsync<JsonElement>(ct);
+                    var (_, probeRaw, _) = ExtractPointsDiag(probeJson, field);
+                    if (probeRaw > 0)
+                    {
+                        filter = probe;
+                        usedFilter = name;
+                        break;
+                    }
+                    emptyFilter ??= probe;
+                    emptyName ??= name;
+                    continue;
                 }
                 if (probeRes.StatusCode == System.Net.HttpStatusCode.NotFound) return (0, null);
                 lastErr = await probeRes.Content.ReadAsStringAsync(ct);
+            }
+            if (filter is null && emptyFilter is not null)
+            {
+                filter = emptyFilter;
+                usedFilter = emptyName;
             }
             if (filter is null)
             {
@@ -528,6 +545,33 @@ public class GoogleHealthService(
     ];
 
     /// <summary>
+    /// CivilDateTime Google → DateTimeOffset (UTC). Часы/минуты опциональны.
+    /// </summary>
+    private static DateTimeOffset? ParseCivil(JsonElement el)
+    {
+        int? Get(string name) =>
+            el.TryGetProperty(name, out var v) && v.ValueKind == JsonValueKind.Number
+                ? v.GetInt32()
+                : null;
+
+        var year = Get("year");
+        var month = Get("month");
+        var day = Get("day");
+        if (year is null || month is null || day is null) return null;
+        try
+        {
+            return new DateTimeOffset(
+                year.Value, month.Value, day.Value,
+                Get("hours") ?? 12, Get("minutes") ?? 0, Get("seconds") ?? 0,
+                TimeSpan.Zero);
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
     /// Длительность в часах из интервала (start/end) — для сна и других
     /// интервальных типов, где величина не хранится числом.
     /// </summary>
@@ -656,6 +700,19 @@ public class GoogleHealthService(
 
     private static DateTimeOffset? ExtractTime(JsonElement el)
     {
+        // Гражданская дата приходит объектом {year, month, day[, hours...]}.
+        foreach (var key in new[]
+                 {
+                     "date", "civilDate", "civilTime", "civilStartTime",
+                     "civilEndTime"
+                 })
+        {
+            if (el.TryGetProperty(key, out var civil) &&
+                civil.ValueKind == JsonValueKind.Object &&
+                ParseCivil(civil) is DateTimeOffset cd)
+                return cd;
+        }
+
         // Время может быть вложено: interval (интервальные) или
         // sampleTime (точечные).
         foreach (var nested in new[] {"interval", "sampleTime", "sample_time"})

@@ -47,6 +47,15 @@ public record MetricStatsDto(
 
 public static class MetricsEndpoints
 {
+    /// <summary>
+    /// Приведение единиц на приёме: HealthKit отдаёт проценты долей
+    /// (0.9 = 90%), поэтому долевые значения домножаем на 100.
+    /// </summary>
+    private static double Normalize(MetricType metric, double value) =>
+        metric is MetricType.BloodOxygen or MetricType.BodyFat && value > 0 && value <= 1
+            ? value * 100
+            : value;
+
     public static IEndpointRouteBuilder MapMetricEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/api/metrics")
@@ -84,7 +93,7 @@ public static class MetricsEndpoints
                 {
                     UserId = userId.Value,
                     Metric = i.Metric,
-                    Value = i.Value,
+                    Value = Normalize(i.Metric, i.Value),
                     Secondary = i.Secondary,
                     Unit = i.Unit,
                     RecordedAt = i.RecordedAt,

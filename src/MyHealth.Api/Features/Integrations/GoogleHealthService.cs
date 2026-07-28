@@ -42,6 +42,52 @@ public class GoogleHealthService(
         "core-body-temperature",
     ];
 
+    /// <summary>
+    /// Кандидаты фильтра для типа, в порядке вероятности. Документация v4
+    /// не описывает ограничения для всех типов, поэтому подбираем рабочий
+    /// вариант пробным запросом и сообщаем его в сводке.
+    /// </summary>
+    private static List<(string Name,
+        Func<DateTimeOffset, DateTimeOffset, string> Build)> FilterCandidates(
+        string dataType, string field)
+    {
+        string Iso(DateTimeOffset d) => d.UtcDateTime.ToString("o");
+        string Day(DateTimeOffset d) => d.UtcDateTime.ToString("yyyy-MM-dd");
+
+        var all = new List<(string, Func<DateTimeOffset, DateTimeOffset, string>)>
+        {
+            ("interval.start", (a, b) =>
+                $"{field}.interval.start_time >= \"{Iso(a)}\" AND " +
+                $"{field}.interval.start_time < \"{Iso(b)}\""),
+            ("interval.end", (a, b) =>
+                $"{field}.interval.end_time >= \"{Iso(a)}\" AND " +
+                $"{field}.interval.end_time < \"{Iso(b)}\""),
+            ("sample_time", (a, b) =>
+                $"{field}.sample_time.physical_time >= \"{Iso(a)}\" AND " +
+                $"{field}.sample_time.physical_time < \"{Iso(b)}\""),
+            ("date", (a, b) =>
+                $"{field}.date >= \"{Day(a)}\" AND {field}.date < \"{Day(b)}\""),
+            ("civil_start", (a, b) =>
+                $"{field}.interval.civil_start_time >= \"{Day(a)}\" AND " +
+                $"{field}.interval.civil_start_time < \"{Day(b)}\""),
+            ("civil_sample", (a, b) =>
+                $"{field}.sample_time.civil_time >= \"{Day(a)}\" AND " +
+                $"{field}.sample_time.civil_time < \"{Day(b)}\""),
+            // Без фильтра — если тип его не поддерживает вовсе.
+            ("none", (_, _) => ""),
+        };
+
+        // Наиболее вероятный вариант ставим первым.
+        var preferred = dataType switch
+        {
+            "sleep" => "interval.end",
+            _ when dataType.StartsWith("daily-") => "date",
+            _ when _sampleTypes.Contains(dataType) => "sample_time",
+            _ => "interval.start",
+        };
+        return all.OrderByDescending(c => c.Item1 == preferred).ToList();
+    }
+
     /// <summary>dataType Google Health API → (наша метрика, единица).</summary>
     private static readonly (string DataType, MetricType Metric)[] Mappings =
     [
@@ -145,6 +191,7 @@ public class GoogleHealthService(
         // Сводка: импортированные типы, реальные ошибки и типы, закрытые
         // Google (по-типовый доступ приложения / верификация).
         var imported = new List<string>();
+        var ok = new List<string>();
         var failed = new List<string>();
         var restricted = new List<string>();
         string? parseSample = null;
@@ -153,10 +200,13 @@ public class GoogleHealthService(
         {
             try
             {
-                var n = await SyncDataTypeAsync(
+                var (n, usedFilter) = await SyncDataTypeWithInfoAsync(
                     db, http, conn.UserId, dataType, metric, from, now, ct);
                 inserted += n;
+                // Указываем сработавший вариант фильтра — так видно, какой
+                // формат приняли типы, где раньше была ошибка.
                 if (n > 0) imported.Add($"{dataType}:{n}");
+                else if (usedFilter is not null) ok.Add($"{dataType}({usedFilter}):0");
             }
             catch (Exception e)
             {
@@ -177,6 +227,7 @@ public class GoogleHealthService(
         conn.LastSyncAt = now;
         var lines = new List<string>();
         if (imported.Count > 0) lines.Add($"Загружено: {string.Join(", ", imported)}");
+        if (ok.Count > 0) lines.Add($"Доступно, но пусто: {string.Join(", ", ok)}");
         if (restricted.Count > 0)
         {
             var scopes = await GetGrantedScopesAsync(accessToken, ct);
@@ -201,13 +252,15 @@ public class GoogleHealthService(
     /// (AIP-160), с пагинацией. Парсим точки и добавляем недостающие
     /// HealthSample (идемпотентно по ClientId).
     /// </summary>
-    private async Task<int> SyncDataTypeAsync(
+    private async Task<(int Inserted, string? Filter)> SyncDataTypeWithInfoAsync(
         AppDbContext db, HttpClient http, Guid userId, string dataType,
         MetricType metric, DateTimeOffset from, DateTimeOffset to, CancellationToken ct)
     {
         var points = new List<(DateTimeOffset At, double Value)>();
         JsonElement? rawSample = null;
         var rawTotal = 0;
+        // Какой вариант фильтра сработал (для диагностики в сводке).
+        string? usedFilter = null;
 
         var field = ToCamelCase(dataType);
         // Высокочастотные «сырые» типы (пульс) API отдаёт только узким
@@ -220,33 +273,33 @@ public class GoogleHealthService(
             var windowEnd = windowStart.AddDays(windowDays);
             if (windowEnd > to) windowEnd = to;
 
-            // Поле времени зависит от вида данных (AIP-160): у сэмплов —
-            // sample_time, у суточных — date, у сна — interval.end_time,
-            // у интервальных — interval.start_time.
-            string filter;
-            if (dataType == "sleep")
+            // Вариант фильтра подбирается автоматически (см. Candidates):
+            // документация не описывает ограничения для всех типов, поэтому
+            // перебираем кандидатов и запоминаем сработавший.
+            var candidates = FilterCandidates(dataType, field);
+            string? filter = null;
+            string? lastErr = null;
+            foreach (var (name, build) in candidates)
             {
-                filter =
-                    $"{field}.interval.end_time >= \"{windowStart.UtcDateTime:o}\" AND " +
-                    $"{field}.interval.end_time < \"{windowEnd.UtcDateTime:o}\"";
+                var probe = build(windowStart, windowEnd);
+                var probeUrl = $"{ApiBase}/{dataType}/dataPoints" +
+                               (probe.Length == 0
+                                   ? "?pageSize=1"
+                                   : $"?filter={Uri.EscapeDataString(probe)}&pageSize=1");
+                var probeRes = await http.GetAsync(probeUrl, ct);
+                if (probeRes.IsSuccessStatusCode)
+                {
+                    filter = probe;
+                    usedFilter = name;
+                    break;
+                }
+                if (probeRes.StatusCode == System.Net.HttpStatusCode.NotFound) return (0, null);
+                lastErr = await probeRes.Content.ReadAsStringAsync(ct);
             }
-            else if (dataType.StartsWith("daily-"))
+            if (filter is null)
             {
-                filter =
-                    $"{field}.date >= \"{windowStart.UtcDateTime:yyyy-MM-dd}\" AND " +
-                    $"{field}.date < \"{windowEnd.UtcDateTime:yyyy-MM-dd}\"";
-            }
-            else if (_sampleTypes.Contains(dataType))
-            {
-                filter =
-                    $"{field}.sample_time.physical_time >= \"{windowStart.UtcDateTime:o}\" AND " +
-                    $"{field}.sample_time.physical_time < \"{windowEnd.UtcDateTime:o}\"";
-            }
-            else
-            {
-                filter =
-                    $"{field}.interval.start_time >= \"{windowStart.UtcDateTime:o}\" AND " +
-                    $"{field}.interval.start_time < \"{windowEnd.UtcDateTime:o}\"";
+                throw new HttpRequestException(
+                    $"{dataType} [400]: {Truncate(lastErr ?? "no variant accepted", 300)}");
             }
 
             string? pageToken = null;
@@ -260,7 +313,7 @@ public class GoogleHealthService(
                 if (!res.IsSuccessStatusCode)
                 {
                     // 404 — тип недоступен у пользователя; молча пропускаем.
-                    if (res.StatusCode == System.Net.HttpStatusCode.NotFound) return 0;
+                    if (res.StatusCode == System.Net.HttpStatusCode.NotFound) return (0, null);
                     var errBody = await res.Content.ReadAsStringAsync(ct);
                     throw new HttpRequestException(
                         $"{dataType} [{(int)res.StatusCode}]: {Truncate(errBody, 300)}");
@@ -286,7 +339,7 @@ public class GoogleHealthService(
                 $"{dataType}: получено {rawTotal}, но не распознано. Пример: " +
                 Truncate(s.GetRawText(), 300));
         }
-        if (points.Count == 0) return 0;
+        if (points.Count == 0) return (0, usedFilter);
 
         // Идемпотентность: не дублируем уже загруженные точки.
         var clientIds = points
@@ -315,7 +368,7 @@ public class GoogleHealthService(
             });
             inserted++;
         }
-        return inserted;
+        return (inserted, usedFilter);
     }
 
     private static string ClientId(string dataType, DateTimeOffset at) =>

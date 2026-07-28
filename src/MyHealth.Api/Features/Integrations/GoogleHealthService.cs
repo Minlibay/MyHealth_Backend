@@ -357,11 +357,20 @@ public class GoogleHealthService(
         {
             var cid = ClientId(dataType, p.At);
             if (existing.Contains(cid) || !seen.Add(cid)) continue;
+            var value = Convert(metric, p.Value);
+            // Не пишем мусор: единица могла не распознаться.
+            if (!IsPlausible(metric, value))
+            {
+                logger.LogWarning(
+                    "Google Health: implausible {Metric} value {Value} (raw {Raw})",
+                    metric, value, p.Value);
+                continue;
+            }
             db.Samples.Add(new HealthSample
             {
                 UserId = userId,
                 Metric = metric,
-                Value = Convert(metric, p.Value),
+                Value = value,
                 RecordedAt = p.At,
                 Source = "google_health",
                 ClientId = cid,
@@ -402,16 +411,36 @@ public class GoogleHealthService(
         return sb.ToString();
     }
 
-    /// <summary>Приведение единиц Google к нашим (метры→км/см, сон→часы).</summary>
+    /// <summary>
+    /// Приведение к нашим единицам после ExtractValueWithUnit (длина там
+    /// уже в метрах, масса в кг, объём в литрах).
+    /// </summary>
     private static double Convert(MetricType metric, double v) => metric switch
     {
         MetricType.Distance => v > 100 ? v / 1000 : v, // метры → км
         MetricType.Sleep => v > 120 ? v / 3600 : v / 60, // сек/мин → часы
-        // Рост: метры → см; миллиметры → см.
-        MetricType.Height => v < 3 ? v * 100 : v > 300 ? v / 10 : v,
-        // Вес: граммы → кг.
-        MetricType.Weight => v > 1000 ? v / 1000 : v,
+        MetricType.Height => v < 3 ? v * 100 : v, // метры → см
         _ => v,
+    };
+
+    /// <summary>
+    /// Правдоподобность значения — не даём мусору (вес 150000, SpO₂ 0.9)
+    /// попасть в базу, даже если единицу распознать не удалось.
+    /// </summary>
+    private static bool IsPlausible(MetricType metric, double v) => metric switch
+    {
+        MetricType.Weight => v is > 2 and < 400,
+        MetricType.Height => v is > 30 and < 260,
+        MetricType.HeartRate or MetricType.RestingHeartRate or
+            MetricType.WalkingHeartRate => v is >= 25 and <= 260,
+        MetricType.BloodOxygen or MetricType.BodyFat => v is > 1 and <= 100,
+        MetricType.BodyTemperature => v is >= 30 and <= 45,
+        MetricType.RespiratoryRate => v is >= 3 and <= 60,
+        MetricType.BloodGlucose => v is > 0.5 and < 40,
+        MetricType.Hrv => v is > 0 and < 400,
+        MetricType.Sleep => v is > 0 and <= 24,
+        MetricType.Bmi => v is > 5 and < 100,
+        _ => v >= 0,
     };
 
     /// <summary>
@@ -454,7 +483,7 @@ public class GoogleHealthService(
                 ? p
                 : el;
             var at = ExtractTime(payload) ?? ExtractTime(el);
-            var value = ExtractNumericLeaf(payload, 0);
+            var value = ExtractValueWithUnit(payload);
             if (value is double v && at is DateTimeOffset t) result.Add((t, v));
         }
         return (result, raw, sample);
@@ -466,6 +495,72 @@ public class GoogleHealthService(
         "sampleTime", "interval", "date", "dataSource", "origin", "name",
         "id", "startUtcOffset", "endUtcOffset", "utcOffset",
     ];
+
+    /// <summary>
+    /// Коэффициенты приведения к нашим единицам по имени поля-единицы.
+    /// Google отдаёт величину в поле, названном единицей (grams, meters...),
+    /// поэтому определяем единицу по имени, а не угадываем по величине.
+    /// </summary>
+    private static readonly (string Key, double Factor)[] _unitFactors =
+    [
+        // Масса → кг
+        ("micrograms", 1e-9), ("milligrams", 1e-6), ("grams", 1e-3),
+        ("kilograms", 1), ("pounds", 0.45359237), ("ounces", 0.0283495),
+        // Длина → метры (дальше Convert переводит в км/см по метрике)
+        ("millimeters", 0.001), ("centimeters", 0.01), ("meters", 1),
+        ("kilometers", 1000), ("miles", 1609.344), ("inches", 0.0254),
+        ("feet", 0.3048),
+        // Энергия → ккал
+        ("kilocalories", 1), ("calories", 0.001), ("kilojoules", 0.239006),
+        ("joules", 0.000239006),
+        // Объём → литры
+        ("milliliters", 0.001), ("liters", 1), ("fluidOuncesUs", 0.0295735),
+        // Прочее — как есть
+        ("celsius", 1), ("beatsPerMinute", 1), ("percentage", 1),
+        ("percent", 1), ("milliseconds", 1), ("count", 1), ("steps", 1),
+        ("breathsPerMinute", 1), ("millimolesPerLiter", 1),
+    ];
+
+    /// <summary>
+    /// Значение с учётом единицы: ищем поле, названное единицей измерения,
+    /// и приводим к нашей. Если такого нет — берём первое число (fallback).
+    /// Отдельно обрабатываем °F и mg/dL.
+    /// </summary>
+    private static double? ExtractValueWithUnit(JsonElement el, int depth = 0)
+    {
+        if (depth > 4) return null;
+        if (el.ValueKind != JsonValueKind.Object) return ExtractNumericLeaf(el, depth);
+
+        foreach (var prop in el.EnumerateObject())
+        {
+            if (_nonValueKeys.Contains(prop.Name)) continue;
+
+            // Фаренгейты и mg/dL требуют формулы, а не множителя.
+            if (prop.Name.Equals("fahrenheit", StringComparison.OrdinalIgnoreCase) &&
+                ExtractNumericLeaf(prop.Value, depth) is double f)
+                return (f - 32) * 5 / 9;
+            if (prop.Name.Contains("milligramsPerDeciliter",
+                    StringComparison.OrdinalIgnoreCase) &&
+                ExtractNumericLeaf(prop.Value, depth) is double mgdl)
+                return mgdl / 18.0; // mg/dL → ммоль/л
+
+            foreach (var (key, factor) in _unitFactors)
+            {
+                if (!prop.Name.Equals(key, StringComparison.OrdinalIgnoreCase)) continue;
+                if (ExtractNumericLeaf(prop.Value, depth) is double v)
+                    return v * factor;
+            }
+
+            // Вложенный объект может нести единицу глубже.
+            if (prop.Value.ValueKind == JsonValueKind.Object)
+            {
+                var nested = ExtractValueWithUnit(prop.Value, depth + 1);
+                if (nested is not null) return nested;
+            }
+        }
+        // Единицу не нашли — прежнее поведение.
+        return ExtractNumericLeaf(el, depth);
+    }
 
     /// <summary>
     /// Первое числовое значение в объекте, кроме служебных полей (время,

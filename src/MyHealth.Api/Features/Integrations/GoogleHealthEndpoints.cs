@@ -51,9 +51,9 @@ public static class GoogleHealthEndpoints
             }
             await db.SaveChangesAsync();
 
-            // Сразу подтягиваем данные (30 дней).
-            var inserted = await svc.SyncAsync(db, conn, 30, default);
-            return Results.Ok(new GoogleHealthSyncResult(inserted));
+            // Отвечаем сразу: полный опрос Google занимает минуты и не должен
+            // держать запрос подключения. Данные тянет отдельный /sync.
+            return Results.Ok(new GoogleHealthSyncResult(0));
         });
 
         group.MapGet("/", async (ClaimsPrincipal principal, AppDbContext db) =>
@@ -75,7 +75,9 @@ public static class GoogleHealthEndpoints
             var conn = await db.GoogleHealthConnections
                 .FirstOrDefaultAsync(c => c.UserId == userId);
             if (conn is null) return Results.Ok(new GoogleHealthSyncResult(0));
-            var inserted = await svc.SyncAsync(db, conn, 7, default);
+            // Первый опрос после подключения — глубже (30 дней), дальше 7.
+            var days = conn.LastSyncAt is null ? 30 : 7;
+            var inserted = await svc.SyncAsync(db, conn, days, default);
             return Results.Ok(new GoogleHealthSyncResult(inserted));
         });
 

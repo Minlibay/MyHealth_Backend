@@ -414,7 +414,10 @@ public class GoogleHealthService(
         if (message.Contains("[404")) return "ERR:404";
         if (message.Contains("[400")) return "ERR:400";
         if (message.Contains("[401")) return "ERR:401";
-        return "ERR";
+        // Неизвестная причина — показываем начало реального текста,
+        // иначе диагностировать нечего.
+        var flat = message.Replace('\n', ' ').Replace('\r', ' ');
+        return $"ERR:{Truncate(flat, 120)}";
     }
 
     /// <summary>"daily-resting-heart-rate" → "dailyRestingHeartRate".</summary>

@@ -32,6 +32,8 @@ builder.Services.Configure<GoogleHealthSettings>(
     builder.Configuration.GetSection(GoogleHealthSettings.SectionName));
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<GoogleHealthService>();
+// Периодический опрос Google без участия телефона.
+builder.Services.AddHostedService<GoogleHealthPollingService>();
 
 // --- База данных (PostgreSQL) ---
 builder.Services.AddDbContext<AppDbContext>(opt =>

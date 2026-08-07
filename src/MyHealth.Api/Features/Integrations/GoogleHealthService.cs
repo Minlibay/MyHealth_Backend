@@ -35,6 +35,16 @@ public class GoogleHealthService(
     private const string TokenEndpoint = "https://oauth2.googleapis.com/token";
     private const string ApiBase = "https://health.googleapis.com/v4/users/me/dataTypes";
 
+    /// <summary>
+    /// Накопительные за сутки типы: Google отдаёт промежуточные снимки
+    /// счётчика, поэтому храним одну запись за день.
+    /// </summary>
+    private static readonly HashSet<string> _cumulativeTypes =
+    [
+        "steps", "distance", "active-energy-burned", "total-calories",
+        "hydration-log", "nutrition-log", "floors", "active-minutes",
+    ];
+
     /// <summary>Точечные (sample) типы — фильтруются по sample_time.</summary>
     private static readonly HashSet<string> _sampleTypes =
     [
@@ -358,6 +368,16 @@ public class GoogleHealthService(
         }
         if (points.Count == 0) return (0, usedFilter);
 
+        // Накопительные за сутки типы Google отдаёт снимками счётчика
+        // (несколько записей за день) — оставляем одну, максимальную.
+        if (_cumulativeTypes.Contains(dataType))
+        {
+            points = points
+                .GroupBy(p => p.At.ToUniversalTime().Date)
+                .Select(g => g.OrderByDescending(p => p.Value).First())
+                .ToList();
+        }
+
         // Идемпотентность: не дублируем уже загруженные точки.
         var clientIds = points
             .Select(p => ClientId(dataType, p.At))
@@ -397,8 +417,14 @@ public class GoogleHealthService(
         return (inserted, usedFilter);
     }
 
+    /// <summary>
+    /// Ключ идемпотентности. У накопительных за сутки типов — по дате,
+    /// чтобы более поздний снимок счётчика не создавал вторую запись.
+    /// </summary>
     private static string ClientId(string dataType, DateTimeOffset at) =>
-        $"gh-{dataType}-{at.ToUniversalTime():yyyy-MM-ddTHH:mm:ssZ}";
+        _cumulativeTypes.Contains(dataType)
+            ? $"gh-{dataType}-{at.ToUniversalTime():yyyy-MM-dd}"
+            : $"gh-{dataType}-{at.ToUniversalTime():yyyy-MM-ddTHH:mm:ssZ}";
 
     private static string Truncate(string s, int max) =>
         s.Length <= max ? s : s[..max];

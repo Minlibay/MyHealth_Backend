@@ -1,0 +1,2072 @@
+[
+  {
+    "eventTypeCode": "sleep.main",
+    "group": "Сон",
+    "name": "Основной сон",
+    "whenCreated": "создаём только по подтверждённому типу или утверждённому правилу нормализации",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "стадии сна, длительность, пульс, ВСР, SpO₂, частота дыхания и показатели сна — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "sleep.nap",
+    "group": "Сон",
+    "name": "Дневной сон",
+    "whenCreated": "создаём только по подтверждённому типу или утверждённому правилу нормализации",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "стадии сна, длительность, пульс, ВСР, SpO₂, частота дыхания и показатели сна — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "sleep.unspecified",
+    "group": "Сон",
+    "name": "Сон без определённого подтипа",
+    "whenCreated": "создаём только по подтверждённому типу или утверждённому правилу нормализации",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "стадии сна, длительность, пульс, ВСР, SpO₂, частота дыхания и показатели сна — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "workout.american_football",
+    "group": "Тренировка / спорт",
+    "name": "Американский футбол",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.archery",
+    "group": "Тренировка / спорт",
+    "name": "Стрельба из лука",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.australian_football",
+    "group": "Тренировка / спорт",
+    "name": "Австралийский футбол",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.badminton",
+    "group": "Тренировка / спорт",
+    "name": "Бадминтон",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.ballet",
+    "group": "Тренировка / спорт",
+    "name": "Балет",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.barre",
+    "group": "Тренировка / спорт",
+    "name": "Барре",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.barry_s",
+    "group": "Тренировка / спорт",
+    "name": "Интервальная тренировка «Баррис»",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны и калории; подходы, повторы и нагрузка — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.baseball",
+    "group": "Тренировка / спорт",
+    "name": "Бейсбол",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.basketball",
+    "group": "Тренировка / спорт",
+    "name": "Баскетбол",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.billiards",
+    "group": "Тренировка / спорт",
+    "name": "Бильярд",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.bodybuilding",
+    "group": "Тренировка / спорт",
+    "name": "Бодибилдинг",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны и калории; подходы, повторы и нагрузка — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.boot_camp",
+    "group": "Тренировка / спорт",
+    "name": "Интенсивная групповая тренировка",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны и калории; подходы, повторы и нагрузка — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.bouldering",
+    "group": "Тренировка / спорт",
+    "name": "Боулдеринг",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.bowling",
+    "group": "Тренировка / спорт",
+    "name": "Боулинг",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.boxing",
+    "group": "Тренировка / спорт",
+    "name": "Бокс",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.breakdancing",
+    "group": "Тренировка / спорт",
+    "name": "Брейк-данс",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.calisthenics",
+    "group": "Тренировка / спорт",
+    "name": "Калистеника",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны и калории; подходы, повторы и нагрузка — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.canoeing",
+    "group": "Тренировка / спорт",
+    "name": "Гребля на каноэ",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, дистанция, темп / скорость, частота гребков, маршрут и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.cardio_dance",
+    "group": "Тренировка / спорт",
+    "name": "Кардиотанцы",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.climbing",
+    "group": "Тренировка / спорт",
+    "name": "Скалолазание",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.cooldown",
+    "group": "Тренировка / спорт",
+    "name": "Заминка",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.core_training",
+    "group": "Тренировка / спорт",
+    "name": "Тренировка мышц кора",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны и калории; подходы, повторы и нагрузка — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.cricket",
+    "group": "Тренировка / спорт",
+    "name": "Крикет",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.cross_country_skiing",
+    "group": "Тренировка / спорт",
+    "name": "Лыжные гонки",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.cross_training",
+    "group": "Тренировка / спорт",
+    "name": "Кросс-тренинг",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны и калории; подходы, повторы и нагрузка — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.curling",
+    "group": "Тренировка / спорт",
+    "name": "Кёрлинг",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.cycling",
+    "group": "Тренировка / спорт",
+    "name": "Велоспорт",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость, мощность, каденс, маршрут и калории — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "workout.dance",
+    "group": "Тренировка / спорт",
+    "name": "Танцы",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.darts",
+    "group": "Тренировка / спорт",
+    "name": "Дартс",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.disc_golf",
+    "group": "Тренировка / спорт",
+    "name": "Диск-гольф",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.disc_sports",
+    "group": "Тренировка / спорт",
+    "name": "Спорт с летающим диском",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.diving",
+    "group": "Тренировка / спорт",
+    "name": "Дайвинг",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, глубина, температура воды, пульс и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.duathlon",
+    "group": "Тренировка / спорт",
+    "name": "Дуатлон",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "сегменты дисциплин, переходы, пульс, зоны, дистанция, маршрут и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.elliptical",
+    "group": "Тренировка / спорт",
+    "name": "Эллиптический тренажёр",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "workout.equestrian",
+    "group": "Тренировка / спорт",
+    "name": "Конный спорт",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.exercise_class",
+    "group": "Тренировка / спорт",
+    "name": "Групповое занятие",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны и калории; подходы, повторы и нагрузка — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.fencing",
+    "group": "Тренировка / спорт",
+    "name": "Фехтование",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.field_hockey",
+    "group": "Тренировка / спорт",
+    "name": "Хоккей на траве",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.fishing",
+    "group": "Тренировка / спорт",
+    "name": "Рыбалка",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.fitness_gaming",
+    "group": "Тренировка / спорт",
+    "name": "Фитнес-игры",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.flexibility",
+    "group": "Тренировка / спорт",
+    "name": "Тренировка гибкости",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.freediving",
+    "group": "Тренировка / спорт",
+    "name": "Фридайвинг",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, глубина, температура воды, пульс и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.functional_fitness",
+    "group": "Тренировка / спорт",
+    "name": "Функциональный тренинг",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны и калории; подходы, повторы и нагрузка — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "workout.functional_strength",
+    "group": "Тренировка / спорт",
+    "name": "Функциональная силовая тренировка",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны и калории; подходы, повторы и нагрузка — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.gaelic_football",
+    "group": "Тренировка / спорт",
+    "name": "Гэльский футбол",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.golf",
+    "group": "Тренировка / спорт",
+    "name": "Гольф",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.gymnastics",
+    "group": "Тренировка / спорт",
+    "name": "Гимнастика",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.hand_cycling",
+    "group": "Тренировка / спорт",
+    "name": "Хендбайк",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость, мощность, каденс, маршрут и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.handball",
+    "group": "Тренировка / спорт",
+    "name": "Гандбол",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.hiit",
+    "group": "Тренировка / спорт",
+    "name": "Высокоинтенсивная интервальная тренировка",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны и калории; подходы, повторы и нагрузка — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "workout.hiking",
+    "group": "Тренировка / спорт",
+    "name": "Пеший поход",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, темп, маршрут, набор высоты и калории — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "workout.hockey",
+    "group": "Тренировка / спорт",
+    "name": "Хоккей",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.hot_yoga",
+    "group": "Тренировка / спорт",
+    "name": "Горячая йога",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.hunting",
+    "group": "Тренировка / спорт",
+    "name": "Охота",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.hurling_camogie",
+    "group": "Тренировка / спорт",
+    "name": "Хёрлинг и камоги",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.ice_hockey",
+    "group": "Тренировка / спорт",
+    "name": "Хоккей с шайбой",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.ice_skating",
+    "group": "Тренировка / спорт",
+    "name": "Катание на коньках",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.indoor_cycling",
+    "group": "Тренировка / спорт",
+    "name": "Велотренировка в помещении",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость, мощность, каденс, маршрут и калории — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "workout.inline_skating",
+    "group": "Тренировка / спорт",
+    "name": "Катание на роликовых коньках",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.jiu_jitsu",
+    "group": "Тренировка / спорт",
+    "name": "Джиу-джитсу",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.judo",
+    "group": "Тренировка / спорт",
+    "name": "Дзюдо",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.jumping_rope",
+    "group": "Тренировка / спорт",
+    "name": "Прыжки на скакалке",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.kayaking",
+    "group": "Тренировка / спорт",
+    "name": "Гребля на каяке",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, дистанция, темп / скорость, частота гребков, маршрут и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.kickboxing",
+    "group": "Тренировка / спорт",
+    "name": "Кикбоксинг",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.kite_boarding",
+    "group": "Тренировка / спорт",
+    "name": "Кайтбординг",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.lacrosse",
+    "group": "Тренировка / спорт",
+    "name": "Лакросс",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.martial_arts",
+    "group": "Тренировка / спорт",
+    "name": "Боевые искусства",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.mind_and_body",
+    "group": "Тренировка / спорт",
+    "name": "Практика тела и сознания",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.mixed_cardio",
+    "group": "Тренировка / спорт",
+    "name": "Смешанная кардиотренировка",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.motocross",
+    "group": "Тренировка / спорт",
+    "name": "Мотокросс",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.motor_racing",
+    "group": "Тренировка / спорт",
+    "name": "Автоспорт",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.mountain_biking",
+    "group": "Тренировка / спорт",
+    "name": "Горный велоспорт",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость, мощность, каденс, маршрут и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.mountaineering",
+    "group": "Тренировка / спорт",
+    "name": "Альпинизм",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.muay_thai",
+    "group": "Тренировка / спорт",
+    "name": "Муай-тай",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.netball",
+    "group": "Тренировка / спорт",
+    "name": "Нетбол",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.nordic_walking",
+    "group": "Тренировка / спорт",
+    "name": "Скандинавская ходьба",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, темп, маршрут, набор высоты и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.obstacle_course_racing",
+    "group": "Тренировка / спорт",
+    "name": "Гонка с препятствиями",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.other",
+    "group": "Тренировка / спорт",
+    "name": "Другая тренировка",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "workout.paddle_tennis",
+    "group": "Тренировка / спорт",
+    "name": "Паддл-теннис",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.paddleboarding",
+    "group": "Тренировка / спорт",
+    "name": "Сапбординг",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, дистанция, темп / скорость, частота гребков, маршрут и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.paddling",
+    "group": "Тренировка / спорт",
+    "name": "Гребные виды спорта",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, дистанция, темп / скорость, частота гребков, маршрут и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.padel",
+    "group": "Тренировка / спорт",
+    "name": "Падел",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.paintball",
+    "group": "Тренировка / спорт",
+    "name": "Пейнтбол",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.paragliding",
+    "group": "Тренировка / спорт",
+    "name": "Парапланеризм",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.parkour",
+    "group": "Тренировка / спорт",
+    "name": "Паркур",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.pickleball",
+    "group": "Тренировка / спорт",
+    "name": "Пиклбол",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.pilates",
+    "group": "Тренировка / спорт",
+    "name": "Пилатес",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны и калории — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "workout.play",
+    "group": "Тренировка / спорт",
+    "name": "Активная игра",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.polo",
+    "group": "Тренировка / спорт",
+    "name": "Поло",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.powerlifting",
+    "group": "Тренировка / спорт",
+    "name": "Пауэрлифтинг",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны и калории; подходы, повторы и нагрузка — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.preparation_and_recovery",
+    "group": "Тренировка / спорт",
+    "name": "Подготовка и восстановление",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.race_walking",
+    "group": "Тренировка / спорт",
+    "name": "Спортивная ходьба",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, темп, маршрут, набор высоты и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.racquetball",
+    "group": "Тренировка / спорт",
+    "name": "Ракетбол",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.reformer_pilates",
+    "group": "Тренировка / спорт",
+    "name": "Пилатес на реформере",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.roller_hockey",
+    "group": "Тренировка / спорт",
+    "name": "Хоккей на роликах",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.rowing",
+    "group": "Тренировка / спорт",
+    "name": "Гребля",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, дистанция, темп / скорость, частота гребков, маршрут и калории — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "workout.rowing_machine",
+    "group": "Тренировка / спорт",
+    "name": "Гребной тренажёр",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, дистанция, темп / скорость, частота гребков, маршрут и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.rucking",
+    "group": "Тренировка / спорт",
+    "name": "Ходьба с грузом",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, темп, маршрут, набор высоты и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.rugby",
+    "group": "Тренировка / спорт",
+    "name": "Регби",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.running",
+    "group": "Тренировка / спорт",
+    "name": "Бег",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, темп, маршрут, набор высоты и калории — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "workout.sailing",
+    "group": "Тренировка / спорт",
+    "name": "Парусный спорт",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.scootering",
+    "group": "Тренировка / спорт",
+    "name": "Катание на самокате",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.scuba_diving",
+    "group": "Тренировка / спорт",
+    "name": "Подводное плавание с аквалангом",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, глубина, температура воды, пульс и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.sculpt_yoga",
+    "group": "Тренировка / спорт",
+    "name": "Силовая йога",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.skateboarding",
+    "group": "Тренировка / спорт",
+    "name": "Скейтбординг",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.skating",
+    "group": "Тренировка / спорт",
+    "name": "Катание на коньках или роликах",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.skating_sports",
+    "group": "Тренировка / спорт",
+    "name": "Конькобежные и роликовые виды спорта",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.ski_touring",
+    "group": "Тренировка / спорт",
+    "name": "Ски-туринг",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.skiing",
+    "group": "Тренировка / спорт",
+    "name": "Лыжный спорт",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.skydiving",
+    "group": "Тренировка / спорт",
+    "name": "Парашютный спорт",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.snow_sports",
+    "group": "Тренировка / спорт",
+    "name": "Снежные виды спорта",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.snowboarding",
+    "group": "Тренировка / спорт",
+    "name": "Сноубординг",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.snowshoeing",
+    "group": "Тренировка / спорт",
+    "name": "Ходьба на снегоступах",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.soccer",
+    "group": "Тренировка / спорт",
+    "name": "Футбол",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.social_dance",
+    "group": "Тренировка / спорт",
+    "name": "Социальные танцы",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.softball",
+    "group": "Тренировка / спорт",
+    "name": "Софтбол",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.spikeball",
+    "group": "Тренировка / спорт",
+    "name": "Спайкбол",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.sport_fishing",
+    "group": "Тренировка / спорт",
+    "name": "Спортивная рыбалка",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.sprint_training",
+    "group": "Тренировка / спорт",
+    "name": "Спринтерская тренировка",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, темп, маршрут, набор высоты и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.squash",
+    "group": "Тренировка / спорт",
+    "name": "Сквош",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.stair_climbing",
+    "group": "Тренировка / спорт",
+    "name": "Подъём по лестнице или степпер",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "workout.step_training",
+    "group": "Тренировка / спорт",
+    "name": "Степ-аэробика",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.strength",
+    "group": "Тренировка / спорт",
+    "name": "Силовая тренировка",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны и калории; подходы, повторы и нагрузка — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "workout.stretching",
+    "group": "Тренировка / спорт",
+    "name": "Растяжка",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.stroller_jogging",
+    "group": "Тренировка / спорт",
+    "name": "Бег с детской коляской",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, темп, маршрут, набор высоты и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.stroller_walking",
+    "group": "Тренировка / спорт",
+    "name": "Прогулка с детской коляской",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, темп, маршрут, набор высоты и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.surfing",
+    "group": "Тренировка / спорт",
+    "name": "Сёрфинг",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.swimming",
+    "group": "Тренировка / спорт",
+    "name": "Плавание",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, дистанция, темп, круги, гребки и калории — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "workout.swimming_open_water",
+    "group": "Тренировка / спорт",
+    "name": "Плавание на открытой воде",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, дистанция, темп, круги, гребки и калории — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "workout.swimming_pool",
+    "group": "Тренировка / спорт",
+    "name": "Плавание в бассейне",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, дистанция, темп, круги, гребки и калории — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "workout.table_tennis",
+    "group": "Тренировка / спорт",
+    "name": "Настольный теннис",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.taekwondo",
+    "group": "Тренировка / спорт",
+    "name": "Тхэквондо",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.tai_chi",
+    "group": "Тренировка / спорт",
+    "name": "Тайцзи",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.tennis",
+    "group": "Тренировка / спорт",
+    "name": "Теннис",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.track_and_field",
+    "group": "Тренировка / спорт",
+    "name": "Лёгкая атлетика",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.trail_running",
+    "group": "Тренировка / спорт",
+    "name": "Трейлраннинг",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, темп, маршрут, набор высоты и калории — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "workout.trampoline",
+    "group": "Тренировка / спорт",
+    "name": "Прыжки на батуте",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.transition",
+    "group": "Тренировка / спорт",
+    "name": "Переход в мультиспорте",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "сегменты дисциплин, переходы, пульс, зоны, дистанция, маршрут и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.treadmill_running",
+    "group": "Тренировка / спорт",
+    "name": "Бег на дорожке",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, темп, маршрут, набор высоты и калории — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "workout.triathlon",
+    "group": "Тренировка / спорт",
+    "name": "Триатлон",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "сегменты дисциплин, переходы, пульс, зоны, дистанция, маршрут и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.ultimate",
+    "group": "Тренировка / спорт",
+    "name": "Алтимат-фрисби",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.underwater_diving",
+    "group": "Тренировка / спорт",
+    "name": "Подводный дайвинг",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, глубина, температура воды, пульс и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.unicycling",
+    "group": "Тренировка / спорт",
+    "name": "Катание на уницикле",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость, мощность, каденс, маршрут и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.volleyball",
+    "group": "Тренировка / спорт",
+    "name": "Волейбол",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.wakeboarding",
+    "group": "Тренировка / спорт",
+    "name": "Вейкбординг",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.walking",
+    "group": "Тренировка / спорт",
+    "name": "Ходьба",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, темп, маршрут, набор высоты и калории — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "workout.water_fitness",
+    "group": "Тренировка / спорт",
+    "name": "Аквафитнес",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, дистанция, темп, круги, гребки и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.water_polo",
+    "group": "Тренировка / спорт",
+    "name": "Водное поло",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, дистанция, темп, круги, гребки и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.water_skiing",
+    "group": "Тренировка / спорт",
+    "name": "Водные лыжи",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.water_sports",
+    "group": "Тренировка / спорт",
+    "name": "Водные виды спорта",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.weightlifting",
+    "group": "Тренировка / спорт",
+    "name": "Тяжёлая атлетика",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны и калории; подходы, повторы и нагрузка — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "workout.wheelchair",
+    "group": "Тренировка / спорт",
+    "name": "Активность на кресле-коляске",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.winter_biathlon",
+    "group": "Тренировка / спорт",
+    "name": "Биатлон",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "пульс, зоны, дистанция, скорость / темп, маршрут, высота и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.wrestling",
+    "group": "Тренировка / спорт",
+    "name": "Спортивная борьба",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны, калории и доступные показатели тренировки — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "workout.yoga",
+    "group": "Тренировка / спорт",
+    "name": "Йога",
+    "whenCreated": "исходный activity type сопоставлен с этим нормализованным кодом",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, зоны и калории — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "activity.babywearing",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Ношение ребёнка",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.bartending",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Работа за барной стойкой",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.caddying",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Работа кэдди",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.cheerleading",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Черлидинг",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.chess",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Шахматы",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.circus_arts",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Цирковое искусство",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.cleaning",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Уборка",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.coaching",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Тренерская работа",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.commuting",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Дорога на работу и обратно",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.cooking",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Приготовление пищи",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.dedicated_parenting",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Уход за ребёнком",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.dog_walking",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Прогулка с собакой",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.driving",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Вождение",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.firefighting",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Работа пожарного",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.gaming",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Видеоигры",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.high_stress_work",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Работа с высоким уровнем стресса",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.manual_labor",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Физический труд",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.musical_performance",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Музыкальное выступление",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.nursing_a_baby",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Кормление ребёнка",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.operations_flying",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Лётная операция",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.operations_medical",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Медицинская работа",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.operations_tactical",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Тактическая операция",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.operations_water",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Работа на воде",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.poker",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Покер",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.public_speaking",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Публичное выступление",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.pumping",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Сцеживание молока",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.refereeing",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Судейство",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.snow_shoveling",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Уборка снега",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.stage_performance",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Сценическое выступление",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.thrill_ride",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Экстремальный аттракцион",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.toddler_wearing",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Ношение ребёнка ясельного возраста",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.watching_sports",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Просмотр спортивного события",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.whoop_labs",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Лабораторное исследование производителя",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "activity.yard_work_gardening",
+    "group": "Бытовая или профессиональная активность",
+    "name": "Работа во дворе или саду",
+    "whenCreated": "создаём по activity/workout-записи источника; это контекст нагрузки, не обязательно спорт",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, нагрузка / strain и калории — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.acupuncture",
+    "group": "Восстановительная сессия",
+    "name": "Иглоукалывание",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.air_compression",
+    "group": "Восстановительная сессия",
+    "name": "Компрессионная терапия",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.body_status",
+    "group": "Восстановительная сессия",
+    "name": "Проверка состояния тела",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.breathing",
+    "group": "Восстановительная сессия",
+    "name": "Дыхательная практика",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР и частота дыхания — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "session.breathwork",
+    "group": "Восстановительная сессия",
+    "name": "Дыхательная тренировка",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР и частота дыхания — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.bright_light_therapy",
+    "group": "Восстановительная сессия",
+    "name": "Терапия ярким светом",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.chiropractor",
+    "group": "Восстановительная сессия",
+    "name": "Сеанс хиропрактики",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.cold_shower",
+    "group": "Восстановительная сессия",
+    "name": "Холодный душ",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, температура кожи и восстановительные показатели — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.contrast_therapy",
+    "group": "Восстановительная сессия",
+    "name": "Контрастная терапия",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, температура кожи и восстановительные показатели — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.cuddling_with_child",
+    "group": "Восстановительная сессия",
+    "name": "Объятия с ребёнком",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.dry_sauna",
+    "group": "Восстановительная сессия",
+    "name": "Сухая сауна",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, температура кожи и восстановительные показатели — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.foam_rolling",
+    "group": "Восстановительная сессия",
+    "name": "Миофасциальный релиз роликом",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.guided_breathing_increase_alertness",
+    "group": "Восстановительная сессия",
+    "name": "Управляемое дыхание для повышения бодрости",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР и частота дыхания — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.guided_breathing_increase_relaxation",
+    "group": "Восстановительная сессия",
+    "name": "Управляемое дыхание для расслабления",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР и частота дыхания — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.hot_tub",
+    "group": "Восстановительная сессия",
+    "name": "Горячая ванна или джакузи",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, температура кожи и восстановительные показатели — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.ice_bath",
+    "group": "Восстановительная сессия",
+    "name": "Ледяная ванна",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, температура кожи и восстановительные показатели — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.infrared_sauna",
+    "group": "Восстановительная сессия",
+    "name": "Инфракрасная сауна",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, температура кожи и восстановительные показатели — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.knitting",
+    "group": "Восстановительная сессия",
+    "name": "Вязание",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.massage_therapy",
+    "group": "Восстановительная сессия",
+    "name": "Массаж",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.meditation",
+    "group": "Восстановительная сессия",
+    "name": "Медитация",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "ч",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "session.movement",
+    "group": "Восстановительная сессия",
+    "name": "Осознанное движение",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.music",
+    "group": "Восстановительная сессия",
+    "name": "Осознанное прослушивание музыки",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.nsdr",
+    "group": "Восстановительная сессия",
+    "name": "Глубокий отдых без сна",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.other",
+    "group": "Восстановительная сессия",
+    "name": "Другая восстановительная сессия",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "session.percussive_massage",
+    "group": "Восстановительная сессия",
+    "name": "Перкуссионный массаж",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.playing_with_child",
+    "group": "Восстановительная сессия",
+    "name": "Игра с ребёнком",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.qi_gong",
+    "group": "Восстановительная сессия",
+    "name": "Цигун",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.red_light_therapy",
+    "group": "Восстановительная сессия",
+    "name": "Терапия красным светом",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.relaxation",
+    "group": "Восстановительная сессия",
+    "name": "Релаксация",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "session.rest",
+    "group": "Восстановительная сессия",
+    "name": "Отдых",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.restorative_yoga",
+    "group": "Восстановительная сессия",
+    "name": "Восстановительная йога",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.sound_healing",
+    "group": "Восстановительная сессия",
+    "name": "Звуковая практика",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.steam_room",
+    "group": "Восстановительная сессия",
+    "name": "Парная",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, температура кожи и восстановительные показатели — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.stretching",
+    "group": "Восстановительная сессия",
+    "name": "Восстановительная растяжка",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.tai_chi",
+    "group": "Восстановительная сессия",
+    "name": "Тайцзи",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.unguided",
+    "group": "Восстановительная сессия",
+    "name": "Ненаправленная практика",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": false
+  },
+  {
+    "eventTypeCode": "session.unspecified",
+    "group": "Восстановительная сессия",
+    "name": "Сессия без определённого подтипа",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, ВСР, настроение и другие показатели сессии — если источник передал",
+    "mvp": true
+  },
+  {
+    "eventTypeCode": "session.warm_bath",
+    "group": "Восстановительная сессия",
+    "name": "Тёплая ванна",
+    "whenCreated": "создаём по отдельной интервальной записи источника",
+    "timeBounds": "start_at · end_at",
+    "relatedData": "длительность, пульс, температура кожи и восстановительные показатели — если источник передал",
+    "mvp": false
+  }
+]

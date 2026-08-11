@@ -4,6 +4,7 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using MyHealth.Api.Data;
 using MyHealth.Api.Domain;
+using MyHealth.Api.Domain.Tracking;
 
 namespace MyHealth.Api.Features.Integrations;
 
@@ -382,11 +383,15 @@ public class GoogleHealthService(
         var clientIds = points
             .Select(p => ClientId(dataType, p.At))
             .ToList();
-        var existing = (await db.Samples
-            .Where(s => s.UserId == userId && s.ClientId != null &&
-                        clientIds.Contains(s.ClientId))
-            .Select(s => s.ClientId!)
+        var existing = (await db.Observations
+            .Where(o => o.UserId == userId && o.ClientId != null &&
+                        clientIds.Contains(o.ClientId))
+            .Select(o => o.ClientId!)
             .ToListAsync(ct)).ToHashSet();
+
+        var metricCode = MetricCodeMap.ToCode(metric);
+        var device = await new TrackingStore(db)
+            .ResolveDeviceAsync(userId, "google_health");
 
         var inserted = 0;
         var seen = new HashSet<string>();
@@ -403,13 +408,13 @@ public class GoogleHealthService(
                     metric, value, p.Value);
                 continue;
             }
-            db.Samples.Add(new HealthSample
+            db.Observations.Add(new Observation
             {
                 UserId = userId,
-                Metric = metric,
-                Value = value,
-                RecordedAt = p.At,
-                Source = "google_health",
+                MetricCode = metricCode,
+                ValueNum = value,
+                StartAt = p.At,
+                DeviceInstanceId = device?.Id,
                 ClientId = cid,
             });
             inserted++;

@@ -1,9 +1,7 @@
 using System.Security.Claims;
-using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using MyHealth.Api.Common;
 using MyHealth.Api.Data;
-using MyHealth.Api.Features.Sleep;
 
 namespace MyHealth.Api.Features.User;
 
@@ -71,44 +69,68 @@ public static class UserEndpoints
                 .FirstOrDefaultAsync(u => u.Id == userId);
             if (user is null) return Results.Unauthorized();
 
-            var samples = await db.Samples.AsNoTracking()
-                .Where(s => s.UserId == userId)
-                .OrderBy(s => s.RecordedAt)
-                .Select(s => new
+            // Экспорт из новой схемы: значения показателей, события,
+            // вендорские результаты и зарегистрированные устройства.
+            var observations = await db.Observations.AsNoTracking()
+                .Include(o => o.DeviceInstance)
+                .Where(o => o.UserId == userId)
+                .OrderBy(o => o.StartAt)
+                .Select(o => new
                 {
-                    s.Metric, s.Value, s.Secondary, s.Unit,
-                    s.RecordedAt, s.Source, s.CreatedAt,
+                    o.MetricCode, o.ValueNum, o.ValueSecondary, o.ValueJson, o.Unit,
+                    o.StartAt, o.EndAt, o.TimezoneOffset,
+                    Source = o.DeviceInstance == null
+                        ? null
+                        : o.DeviceInstance.IntegrationPlatform +
+                          (o.DeviceInstance.DataOriginAppId == null
+                              ? ""
+                              : ":" + o.DeviceInstance.DataOriginAppId),
+                    o.CreatedAt,
                 })
                 .ToListAsync();
 
-            var workouts = await db.Workouts.AsNoTracking()
-                .Where(w => w.UserId == userId)
-                .OrderBy(w => w.StartedAt)
-                .Select(w => new
+            var events = await db.Events.AsNoTracking()
+                .Include(e => e.DeviceInstance)
+                .Where(e => e.UserId == userId)
+                .OrderBy(e => e.StartAt)
+                .Select(e => new
                 {
-                    w.ActivityType, w.StartedAt, w.EndedAt,
-                    w.EnergyKcal, w.DistanceMeters, w.Source, w.CreatedAt,
+                    e.EventTypeCode, e.EventName, e.StartAt, e.EndAt,
+                    e.SourceEventType,
+                    Source = e.DeviceInstance == null
+                        ? null
+                        : e.DeviceInstance.IntegrationPlatform,
+                    e.CreatedAt,
                 })
                 .ToListAsync();
 
-            var sleep = (await db.SleepSessions.AsNoTracking()
-                .Where(s => s.UserId == userId)
-                .OrderBy(s => s.StartedAt)
-                .ToListAsync())
-                .Select(s => new
+            var vendorMetrics = await db.VendorMetrics.AsNoTracking()
+                .Where(v => v.UserId == userId)
+                .OrderBy(v => v.EffectiveAt)
+                .Select(v => new
                 {
-                    s.StartedAt, s.EndedAt, s.Source, s.CreatedAt,
-                    Stages = JsonSerializer.Deserialize<List<SleepStageDto>>(
-                        s.StagesJson, SleepSessionDto.JsonOptions),
-                });
+                    v.VendorMetricCode, v.ValueNum, v.ValueText, v.Unit,
+                    v.EffectiveAt, v.PeriodEndAt, v.SourceState, v.CreatedAt,
+                })
+                .ToListAsync();
+
+            var devices = await db.DeviceInstances.AsNoTracking()
+                .Where(d => d.UserId == userId)
+                .Select(d => new
+                {
+                    d.IntegrationPlatform, d.DeviceType, d.DeviceName,
+                    d.Manufacturer, d.Model, d.DataOriginAppId, d.CreatedAt,
+                })
+                .ToListAsync();
 
             var export = new
             {
                 ExportedAt = DateTimeOffset.UtcNow,
                 Profile = new { user.Email, user.DisplayName, user.CreatedAt },
-                Samples = samples,
-                Workouts = workouts,
-                SleepSessions = sleep,
+                Devices = devices,
+                Observations = observations,
+                Events = events,
+                VendorMetrics = vendorMetrics,
             };
 
             return Results.Json(export);

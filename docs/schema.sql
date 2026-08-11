@@ -1,6 +1,17 @@
 -- MyHealth — схема БД (PostgreSQL 17), консолидированная из EF Core миграций.
--- Данные с трекеров: Samples (точечные показатели), Workouts (тренировки),
--- SleepSessions (сон с фазами). Users — владелец данных, остальные — служебные.
+--
+-- Модель трекинга нормализована и состоит из трёх слоёв:
+--   1) Справочники (реестры)   — что вообще можно измерять и какие бывают события:
+--      MetricDefinitions, EventTypeDefinitions, SourceEventTypeMaps,
+--      VendorMetricDefinitions, ValueDictionary, ReferenceRanges.
+--      Заполняются при старте приложения из JSON (src/MyHealth.Api/Data/Seed).
+--   2) Данные пользователя     — Observations (значения показателей),
+--      Events (события: сон, тренировка, активность), VendorMetrics
+--      (готовые оценки вендоров), MeasurementEventLinks (связь значение↔событие),
+--      DeviceInstances (конкретные устройства/приложения-источники),
+--      DerivedMetrics (наши собственные расчёты, если их нужно сохранить).
+--   3) Служебные                — Users, RefreshTokens, GoogleHealthConnections, Tags.
+--
 -- Полный runnable-скрипт с историей миграций: dotnet ef migrations script.
 
 -- ============================================================
@@ -26,95 +37,272 @@ CREATE TABLE "Users" (
 CREATE UNIQUE INDEX "IX_Users_Email" ON "Users" ("Email");
 
 -- ============================================================
--- Samples — все точечные показатели с любого трекера
--- (пульс, шаги, SpO2, вес, давление, глюкоза, температура и т.д.)
+-- СПРАВОЧНИКИ
 -- ============================================================
-CREATE TABLE "Samples" (
-    "Id"         uuid PRIMARY KEY,
-    "UserId"     uuid NOT NULL REFERENCES "Users" ("Id") ON DELETE CASCADE,
-    "Metric"     varchar(32) NOT NULL,   -- enum строкой, см. список ниже
-    "Value"      double precision NOT NULL,   -- для давления: систолическое
-    "Secondary"  double precision,            -- для давления: диастолическое
-    "Unit"       varchar(32),
-    "RecordedAt" timestamptz NOT NULL,    -- время измерения на устройстве
-    "Source"     varchar(128),           -- 'ключ:приложение', см. ниже
-    "ClientId"   varchar(128),           -- ключ идемпотентности
-    "CreatedAt"  timestamptz NOT NULL
+
+-- Реестр показателей: единый код показателя для всех источников.
+-- metric_code вида "cardio.hr.instant", "activity.steps", "sleep.efficiency".
+CREATE TABLE "MetricDefinitions" (
+    "MetricCode"       varchar(96) PRIMARY KEY,
+    "Name"             varchar(256) NOT NULL,
+    "Domain"           varchar(96),   -- Сердце / Активность / Сон / Тело / ...
+    "Grain"            varchar(16),   -- instant | interval | daily | session
+    "Trigger"          varchar(32),   -- continuous | on_demand | derived | manual
+    "Derivation"       varchar(32),   -- raw | aggregate | model | vendor
+    "Episodes"         text,          -- бывают ли эпизоды (например, апноэ)
+    "ValueType"        varchar(16),   -- number | json | text | boolean
+    "Unit"             varchar(48),
+    -- Доступность у типовых носимых устройств (справочно)
+    "VendorOura"       boolean NOT NULL,
+    "VendorGarmin"     boolean NOT NULL,
+    "VendorAppleWatch" boolean NOT NULL,
+    "VendorWhoop"      boolean NOT NULL,
+    "VendorRing"       boolean NOT NULL
 );
--- Защита от дублей при повторной выгрузке
-CREATE UNIQUE INDEX "IX_Samples_UserId_ClientId"
-    ON "Samples" ("UserId", "ClientId") WHERE "ClientId" IS NOT NULL;
--- Быстрая выборка истории показателя
-CREATE INDEX "IX_Samples_UserId_Metric_RecordedAt"
-    ON "Samples" ("UserId", "Metric", "RecordedAt");
 
--- Metric (значения, строкой):
---   Steps, HeartRate, BloodPressure, Weight, Sleep, BloodGlucose,
---   BloodOxygen, ActiveEnergy, Distance, Water, BodyTemperature,
---   RespiratoryRate, RestingHeartRate, Hrv, BodyFat, Height, DietaryEnergy
---
--- Source (формат 'ключ:приложение'), примеры:
---   apple_health:Apple Watch | apple_health:JCVitalPro |
---   health_connect:Google Fit | google_health | ring:JCRing X3 | manual
-
--- ============================================================
--- Workouts — тренировки
--- (зоны пульса и TRIMP не хранятся — считаются на лету из Samples)
--- ============================================================
-CREATE TABLE "Workouts" (
-    "Id"             uuid PRIMARY KEY,
-    "UserId"         uuid NOT NULL REFERENCES "Users" ("Id") ON DELETE CASCADE,
-    "ActivityType"   varchar(64) NOT NULL,   -- RUNNING, YOGA, BIKING, ...
-    "StartedAt"      timestamptz NOT NULL,
-    "EndedAt"        timestamptz NOT NULL,
-    "EnergyKcal"     double precision,
-    "DistanceMeters" double precision,
-    "Source"         varchar(128),
-    "ClientId"       varchar(128),
-    "CreatedAt"      timestamptz NOT NULL
+-- Реестр типов событий: сон, тренировки (155 видов), активность, сессии.
+CREATE TABLE "EventTypeDefinitions" (
+    "EventTypeCode" varchar(96) PRIMARY KEY,   -- workout.running, sleep.main, ...
+    "Name"          varchar(256) NOT NULL,
+    "Group"         varchar(96),               -- Сон / Тренировка / Активность
+    "WhenCreated"   text,                      -- когда событие возникает
+    "TimeBounds"    text,                      -- чем задаются границы времени
+    "RelatedData"   text,                      -- какие значения к нему привязаны
+    "Mvp"           boolean NOT NULL           -- входит в MVP
 );
-CREATE UNIQUE INDEX "IX_Workouts_UserId_ClientId"
-    ON "Workouts" ("UserId", "ClientId") WHERE "ClientId" IS NOT NULL;
-CREATE INDEX "IX_Workouts_UserId_StartedAt"
-    ON "Workouts" ("UserId", "StartedAt");
+CREATE INDEX "IX_EventTypeDefinitions_Mvp" ON "EventTypeDefinitions" ("Mvp");
 
--- ============================================================
--- SleepSessions — сон с фазами
--- ============================================================
-CREATE TABLE "SleepSessions" (
-    "Id"         uuid PRIMARY KEY,
-    "UserId"     uuid NOT NULL REFERENCES "Users" ("Id") ON DELETE CASCADE,
-    "StartedAt"  timestamptz NOT NULL,
-    "EndedAt"    timestamptz NOT NULL,
-    -- JSON-массив сегментов фаз:
-    -- [{"stage":"deep|light|rem|awake","start":"...","end":"..."}]
-    "StagesJson" text NOT NULL,
-    "Source"     varchar(128),
-    "ClientId"   varchar(128),
-    "CreatedAt"  timestamptz NOT NULL
+-- Маппинг «тип события источника → наш код события».
+-- Source: apple_health | health_connect | google_health | ring.
+CREATE TABLE "SourceEventTypeMaps" (
+    "Id"              integer GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    "Source"          varchar(64) NOT NULL,
+    "Entity"          text,                    -- сущность в API источника
+    "SourceEventType" varchar(160) NOT NULL,   -- HKWorkoutActivityTypeRunning и т.п.
+    "EventTypeCode"   varchar(96) NOT NULL,
+    "Availability"    varchar(64),
+    "Note"            text
 );
-CREATE UNIQUE INDEX "IX_SleepSessions_UserId_ClientId"
-    ON "SleepSessions" ("UserId", "ClientId") WHERE "ClientId" IS NOT NULL;
-CREATE INDEX "IX_SleepSessions_UserId_StartedAt"
-    ON "SleepSessions" ("UserId", "StartedAt");
+CREATE UNIQUE INDEX "IX_SourceEventTypeMaps_Source_SourceEventType"
+    ON "SourceEventTypeMaps" ("Source", "SourceEventType");
+
+-- Реестр вендорских показателей: готовые оценки (Readiness, Body Battery,
+-- Recovery и т.п.), которые считает вендор, а не мы.
+CREATE TABLE "VendorMetricDefinitions" (
+    "VendorMetricCode"    varchar(96) PRIMARY KEY,
+    "Name"                varchar(256) NOT NULL,
+    "Domain"              text,
+    "Grain"               text,
+    "Episodes"            text,
+    "ValueType"           text,
+    "ScaleUnit"           text,      -- шкала (0..100 и т.п.)
+    "Vendor"              varchar(48),   -- oura | garmin | whoop | apple | fitbit
+    "VendorField"         text,
+    "VendorMetricType"    varchar(32),   -- score | index | state
+    "Direction"           text,          -- больше лучше / меньше лучше
+    "UsePolicy"           varchar(32),   -- как можно использовать значение
+    "ComparisonRule"      text,          -- можно ли сравнивать между вендорами
+    "FormulaTransparency" text,          -- известна ли формула
+    "KnownInputs"         text,
+    "VendorApi"           text,
+    "AppleHealth"         text,
+    "HealthConnect"       text,
+    "AvailableInMvp"      boolean NOT NULL,
+    "Docs"                text
+);
+
+-- Словарь допустимых значений служебных колонок (grain, trigger, derivation,
+-- device_type, link_method, ...) — для подсказок и валидации.
+CREATE TABLE "ValueDictionary" (
+    "Id"      integer GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    "Column"  varchar(48) NOT NULL,
+    "Value"   varchar(64) NOT NULL,
+    "Label"   text,
+    "WhenSet" text,
+    "Example" text
+);
+CREATE UNIQUE INDEX "IX_ValueDictionary_Column_Value"
+    ON "ValueDictionary" ("Column", "Value");
+
+-- Референсные диапазоны показателя для популяции (норма/предупреждение).
+CREATE TABLE "ReferenceRanges" (
+    "Id"         integer GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    "MetricCode" varchar(96) NOT NULL,
+    "Population" varchar(48) NOT NULL,   -- all | male | female | age_30_40 ...
+    "MinNormal"  double precision,
+    "MaxNormal"  double precision,
+    "MinWarn"    double precision,
+    "MaxWarn"    double precision,
+    "Unit"       varchar(48),
+    "Source"     text
+);
+CREATE UNIQUE INDEX "IX_ReferenceRanges_MetricCode_Population"
+    ON "ReferenceRanges" ("MetricCode", "Population");
 
 -- ============================================================
--- TagEvents — журнал тегов (кофе/алкоголь/болею и т.п.)
+-- ДАННЫЕ ПОЛЬЗОВАТЕЛЯ
 -- ============================================================
-CREATE TABLE "TagEvents" (
+
+-- Конкретное устройство/приложение-источник у пользователя.
+-- Прежняя строка Source ("apple_health:JCVitalPro") раскладывается сюда:
+-- IntegrationPlatform = apple_health, DataOriginAppId = JCVitalPro.
+CREATE TABLE "DeviceInstances" (
+    "Id"                  uuid PRIMARY KEY,
+    "UserId"              uuid NOT NULL REFERENCES "Users" ("Id") ON DELETE CASCADE,
+    "IntegrationPlatform" varchar(32) NOT NULL,   -- apple_health | health_connect
+                                                  -- | google_health | ring | manual
+    "SourceDeviceId"      varchar(160),           -- идентификатор устройства в API
+    "DeviceType"          varchar(24) NOT NULL,   -- ring | watch | phone | band
+                                                  -- | scale | other | unknown
+    "DeviceName"          varchar(128),
+    "Manufacturer"        varchar(96),
+    "Model"               varchar(96),
+    "DataOriginAppId"     varchar(160),           -- приложение, записавшее данные
+    "CreatedAt"           timestamptz NOT NULL
+);
+CREATE INDEX "IX_DeviceInstances_UserId_IntegrationPlatform_DataOriginAppId_~"
+    ON "DeviceInstances"
+       ("UserId", "IntegrationPlatform", "DataOriginAppId", "SourceDeviceId");
+
+-- Observations — все значения показателей с любого источника.
+-- Числовое значение в ValueNum, сложное (например стадии сна) — в ValueJson.
+CREATE TABLE "Observations" (
+    "Id"               uuid PRIMARY KEY,
+    "UserId"           uuid NOT NULL REFERENCES "Users" ("Id") ON DELETE CASCADE,
+    "MetricCode"       varchar(96) NOT NULL
+                       REFERENCES "MetricDefinitions" ("MetricCode"),
+    "ValueNum"         double precision,       -- для давления: систолическое
+    "ValueJson"        jsonb,                  -- структурные значения
+    "ValueSecondary"   double precision,       -- для давления: диастолическое
+    "Unit"             varchar(48),
+    "StartAt"          timestamptz NOT NULL,   -- моментальное значение: время замера
+    "EndAt"            timestamptz,            -- интервальное: конец интервала
+    "TimezoneOffset"   interval,               -- местное смещение при измерении
+    "DeviceInstanceId" uuid REFERENCES "DeviceInstances" ("Id") ON DELETE SET NULL,
+    "SourceRecordId"   varchar(160),           -- id записи в API источника
+    "SourceUpdatedAt"  timestamptz,
+    "ClientId"         varchar(160),           -- ключ идемпотентности
+    "CreatedAt"        timestamptz NOT NULL
+);
+CREATE UNIQUE INDEX "IX_Observations_UserId_ClientId"
+    ON "Observations" ("UserId", "ClientId") WHERE "ClientId" IS NOT NULL;
+CREATE INDEX "IX_Observations_UserId_MetricCode_StartAt"
+    ON "Observations" ("UserId", "MetricCode", "StartAt");
+CREATE INDEX "IX_Observations_MetricCode" ON "Observations" ("MetricCode");
+CREATE INDEX "IX_Observations_DeviceInstanceId"
+    ON "Observations" ("DeviceInstanceId");
+
+-- Events — события с началом и концом: сон, тренировка, активность, сессия.
+CREATE TABLE "Events" (
+    "Id"                   uuid PRIMARY KEY,
+    "UserId"               uuid NOT NULL REFERENCES "Users" ("Id") ON DELETE CASCADE,
+    "EventTypeCode"        varchar(96) NOT NULL
+                           REFERENCES "EventTypeDefinitions" ("EventTypeCode"),
+    "EventName"            varchar(256) NOT NULL,
+    "StartAt"              timestamptz NOT NULL,
+    "EndAt"                timestamptz,
+    "TimezoneOffset"       interval,
+    "DeviceInstanceId"     uuid REFERENCES "DeviceInstances" ("Id") ON DELETE SET NULL,
+    "SourceRecordId"       varchar(160),
+    "SourceEventType"      varchar(160),   -- как назвал источник (до маппинга)
+    "SourceUpdatedAt"      timestamptz,
+    "SourceParentRecordId" varchar(160),   -- вложенность (интервал внутри сессии)
+    "ClientId"             varchar(160),
+    "CreatedAt"            timestamptz NOT NULL
+);
+CREATE UNIQUE INDEX "IX_Events_UserId_ClientId"
+    ON "Events" ("UserId", "ClientId") WHERE "ClientId" IS NOT NULL;
+CREATE INDEX "IX_Events_UserId_EventTypeCode_StartAt"
+    ON "Events" ("UserId", "EventTypeCode", "StartAt");
+CREATE INDEX "IX_Events_UserId_StartAt" ON "Events" ("UserId", "StartAt");
+CREATE INDEX "IX_Events_EventTypeCode" ON "Events" ("EventTypeCode");
+CREATE INDEX "IX_Events_DeviceInstanceId" ON "Events" ("DeviceInstanceId");
+
+-- Связь «значение ↔ событие»: калории тренировки, стадии сна и т.п.
+-- MeasurementType: observation | vendor_metric | derived_metric.
+CREATE TABLE "MeasurementEventLinks" (
+    "Id"              uuid PRIMARY KEY,
+    "MeasurementId"   uuid NOT NULL,
+    "MeasurementType" varchar(24) NOT NULL,
+    "EventId"         uuid NOT NULL REFERENCES "Events" ("Id") ON DELETE CASCADE,
+    "LinkMethod"      varchar(24) NOT NULL,   -- source_explicit | time_overlap
+                                              -- | derived | manual
+    "LinkedAt"        timestamptz NOT NULL
+);
+CREATE UNIQUE INDEX "IX_MeasurementEventLinks_EventId_MeasurementId_MeasurementType"
+    ON "MeasurementEventLinks" ("EventId", "MeasurementId", "MeasurementType");
+CREATE INDEX "IX_MeasurementEventLinks_MeasurementId_MeasurementType"
+    ON "MeasurementEventLinks" ("MeasurementId", "MeasurementType");
+
+-- VendorMetrics — готовые оценки вендоров, отдельно от наших измерений.
+CREATE TABLE "VendorMetrics" (
+    "Id"                         uuid PRIMARY KEY,
+    "UserId"                     uuid NOT NULL
+                                 REFERENCES "Users" ("Id") ON DELETE CASCADE,
+    "VendorMetricCode"           varchar(96) NOT NULL
+                                 REFERENCES "VendorMetricDefinitions"
+                                            ("VendorMetricCode"),
+    "ValueNum"                   double precision,
+    "ValueText"                  varchar(256),   -- состояние словом
+    "Unit"                       varchar(48),
+    "EffectiveAt"                timestamptz NOT NULL,
+    "PeriodEndAt"                timestamptz,
+    "SourceRecordId"             varchar(160),
+    "SourceState"                varchar(32),
+    "SourceUpdatedAt"            timestamptz,
+    "SourceDetails"              jsonb,          -- как есть от вендора
+    "SourceDetailsSchemaVersion" varchar(64),
+    "DeviceInstanceId"           uuid REFERENCES "DeviceInstances" ("Id")
+                                 ON DELETE SET NULL,
+    "ClientId"                   varchar(160),
+    "CreatedAt"                  timestamptz NOT NULL
+);
+CREATE UNIQUE INDEX "IX_VendorMetrics_UserId_ClientId"
+    ON "VendorMetrics" ("UserId", "ClientId") WHERE "ClientId" IS NOT NULL;
+CREATE INDEX "IX_VendorMetrics_UserId_VendorMetricCode_EffectiveAt"
+    ON "VendorMetrics" ("UserId", "VendorMetricCode", "EffectiveAt");
+CREATE INDEX "IX_VendorMetrics_VendorMetricCode"
+    ON "VendorMetrics" ("VendorMetricCode");
+CREATE INDEX "IX_VendorMetrics_DeviceInstanceId"
+    ON "VendorMetrics" ("DeviceInstanceId");
+
+-- DerivedMetrics — наши собственные расчёты, если результат нужно сохранить.
+-- Текущие скоры/тренды считаются на лету и здесь не хранятся.
+CREATE TABLE "DerivedMetrics" (
+    "Id"               uuid PRIMARY KEY,
+    "UserId"           uuid NOT NULL REFERENCES "Users" ("Id") ON DELETE CASCADE,
+    "MetricCode"       varchar(96) NOT NULL,
+    "Name"             varchar(256) NOT NULL,
+    "ValueNum"         double precision,
+    "ValueJson"        jsonb,
+    "Unit"             varchar(48),
+    "EffectiveAt"      timestamptz NOT NULL,
+    "PeriodStartAt"    timestamptz,
+    "PeriodEndAt"      timestamptz,
+    "AlgorithmVersion" varchar(32),   -- версия нашей формулы
+    "FactorsJson"      jsonb,         -- вклад факторов (объяснимость)
+    "CreatedAt"        timestamptz NOT NULL
+);
+CREATE UNIQUE INDEX "IX_DerivedMetrics_UserId_MetricCode_EffectiveAt"
+    ON "DerivedMetrics" ("UserId", "MetricCode", "EffectiveAt");
+
+-- ============================================================
+-- Служебные таблицы
+-- ============================================================
+
+-- Refresh-токены (хранится только SHA-256 хеш).
+CREATE TABLE "RefreshTokens" (
     "Id"        uuid PRIMARY KEY,
     "UserId"    uuid NOT NULL REFERENCES "Users" ("Id") ON DELETE CASCADE,
-    "Tag"       varchar(64) NOT NULL,   -- coffee, alcohol, sick, ...
-    "At"        timestamptz NOT NULL,
+    "TokenHash" varchar(128) NOT NULL,
+    "ExpiresAt" timestamptz NOT NULL,
+    "RevokedAt" timestamptz,
     "CreatedAt" timestamptz NOT NULL
 );
-CREATE INDEX "IX_TagEvents_UserId_At" ON "TagEvents" ("UserId", "At");
+CREATE INDEX "IX_RefreshTokens_TokenHash" ON "RefreshTokens" ("TokenHash");
+CREATE INDEX "IX_RefreshTokens_UserId" ON "RefreshTokens" ("UserId");
 
--- ============================================================
--- Служебные таблицы (не данные трекеров)
--- ============================================================
-
--- Подключение к Google Health API (облачный импорт Fitbit/Google)
+-- Подключение Google Health API (облачный импорт Fitbit/Google).
 CREATE TABLE "GoogleHealthConnections" (
     "Id"           uuid PRIMARY KEY,
     "UserId"       uuid NOT NULL REFERENCES "Users" ("Id") ON DELETE CASCADE,
@@ -127,19 +315,20 @@ CREATE TABLE "GoogleHealthConnections" (
 CREATE UNIQUE INDEX "IX_GoogleHealthConnections_UserId"
     ON "GoogleHealthConnections" ("UserId");
 
--- Refresh-токены авторизации приложения
-CREATE TABLE "RefreshTokens" (
+-- Дневник отметок пользователя (кофе, алкоголь, стресс, болезнь...).
+CREATE TABLE "TagEvents" (
     "Id"        uuid PRIMARY KEY,
     "UserId"    uuid NOT NULL REFERENCES "Users" ("Id") ON DELETE CASCADE,
-    "TokenHash" varchar(64) NOT NULL,
-    "ExpiresAt" timestamptz NOT NULL,
-    "RevokedAt" timestamptz,
+    "Tag"       varchar(64) NOT NULL,
+    "At"        timestamptz NOT NULL,
     "CreatedAt" timestamptz NOT NULL
 );
-CREATE UNIQUE INDEX "IX_RefreshTokens_TokenHash" ON "RefreshTokens" ("TokenHash");
-CREATE INDEX "IX_RefreshTokens_UserId" ON "RefreshTokens" ("UserId");
+CREATE INDEX "IX_TagEvents_UserId_At" ON "TagEvents" ("UserId", "At");
 
--- Примечания:
--- * Все расчёты (скоры, тренды, зоны пульса, VO2max, ночные показатели)
---   считаются на лету из таблиц выше и в БД не хранятся.
--- * Удаление пользователя каскадно удаляет все его данные (GDPR).
+-- ============================================================
+-- Прежние таблицы (совместимость)
+-- ============================================================
+-- Samples, Workouts, SleepSessions остались от предыдущей модели.
+-- При старте приложения их содержимое один раз переносится в
+-- Observations / Events / MeasurementEventLinks (LegacyDataMigrator),
+-- после чего новые записи туда не пишутся. Схему см. в истории миграций.

@@ -1,0 +1,2938 @@
+[
+ {
+  "source": "Источник",
+  "entity": "Сущность",
+  "sourceEventType": "source_event_type",
+  "eventTypeCode": "event_type_code",
+  "availability": "Доступность",
+  "note": "Комментарий / ограничение"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "sleepAnalysis",
+  "sourceEventType": "интервалы стадий сна",
+  "eventTypeCode": "sleep.unspecified",
+  "availability": "рассчитываем",
+  "note": "HealthKit не отдаёт готовую sleep session и не различает main / nap"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "mindfulSession",
+  "sourceEventType": "mindfulSession",
+  "eventTypeCode": "session.unspecified",
+  "availability": "напрямую",
+  "note": "стандартный подтип meditation / breathing отсутствует"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.archery",
+  "eventTypeCode": "workout.archery",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.bowling",
+  "eventTypeCode": "workout.bowling",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.fencing",
+  "eventTypeCode": "workout.fencing",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.gymnastics",
+  "eventTypeCode": "workout.gymnastics",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.trackAndField",
+  "eventTypeCode": "workout.track_and_field",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.americanFootball",
+  "eventTypeCode": "workout.american_football",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.australianFootball",
+  "eventTypeCode": "workout.australian_football",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.baseball",
+  "eventTypeCode": "workout.baseball",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.basketball",
+  "eventTypeCode": "workout.basketball",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.cricket",
+  "eventTypeCode": "workout.cricket",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.discSports",
+  "eventTypeCode": "workout.disc_sports",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.handball",
+  "eventTypeCode": "workout.handball",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.hockey",
+  "eventTypeCode": "workout.hockey",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.lacrosse",
+  "eventTypeCode": "workout.lacrosse",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.rugby",
+  "eventTypeCode": "workout.rugby",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.soccer",
+  "eventTypeCode": "workout.soccer",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.softball",
+  "eventTypeCode": "workout.softball",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.volleyball",
+  "eventTypeCode": "workout.volleyball",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.preparationAndRecovery",
+  "eventTypeCode": "workout.preparation_and_recovery",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.flexibility",
+  "eventTypeCode": "workout.flexibility",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.cooldown",
+  "eventTypeCode": "workout.cooldown",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.walking",
+  "eventTypeCode": "workout.walking",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.running",
+  "eventTypeCode": "workout.running",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.wheelchairWalkPace",
+  "eventTypeCode": "workout.wheelchair",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.wheelchairRunPace",
+  "eventTypeCode": "workout.wheelchair",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.cycling",
+  "eventTypeCode": "workout.cycling",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.handCycling",
+  "eventTypeCode": "workout.hand_cycling",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.coreTraining",
+  "eventTypeCode": "workout.core_training",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.elliptical",
+  "eventTypeCode": "workout.elliptical",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.functionalStrengthTraining",
+  "eventTypeCode": "workout.functional_strength",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.traditionalStrengthTraining",
+  "eventTypeCode": "workout.strength",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.crossTraining",
+  "eventTypeCode": "workout.cross_training",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.mixedCardio",
+  "eventTypeCode": "workout.mixed_cardio",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.highIntensityIntervalTraining",
+  "eventTypeCode": "workout.hiit",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.jumpRope",
+  "eventTypeCode": "workout.jumping_rope",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.stairClimbing",
+  "eventTypeCode": "workout.stair_climbing",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.stairs",
+  "eventTypeCode": "workout.stair_climbing",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.stepTraining",
+  "eventTypeCode": "workout.step_training",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.fitnessGaming",
+  "eventTypeCode": "workout.fitness_gaming",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.barre",
+  "eventTypeCode": "workout.barre",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.cardioDance",
+  "eventTypeCode": "workout.cardio_dance",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.socialDance",
+  "eventTypeCode": "workout.social_dance",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.yoga",
+  "eventTypeCode": "workout.yoga",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.mindAndBody",
+  "eventTypeCode": "workout.mind_and_body",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.pilates",
+  "eventTypeCode": "workout.pilates",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.badminton",
+  "eventTypeCode": "workout.badminton",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.pickleball",
+  "eventTypeCode": "workout.pickleball",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.racquetball",
+  "eventTypeCode": "workout.racquetball",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.squash",
+  "eventTypeCode": "workout.squash",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.tableTennis",
+  "eventTypeCode": "workout.table_tennis",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.tennis",
+  "eventTypeCode": "workout.tennis",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.climbing",
+  "eventTypeCode": "workout.climbing",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.equestrianSports",
+  "eventTypeCode": "workout.equestrian",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.fishing",
+  "eventTypeCode": "workout.fishing",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.golf",
+  "eventTypeCode": "workout.golf",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.hiking",
+  "eventTypeCode": "workout.hiking",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.hunting",
+  "eventTypeCode": "workout.hunting",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.play",
+  "eventTypeCode": "workout.play",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.crossCountrySkiing",
+  "eventTypeCode": "workout.cross_country_skiing",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.curling",
+  "eventTypeCode": "workout.curling",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.downhillSkiing",
+  "eventTypeCode": "workout.skiing",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.snowSports",
+  "eventTypeCode": "workout.snow_sports",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.snowboarding",
+  "eventTypeCode": "workout.snowboarding",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.skatingSports",
+  "eventTypeCode": "workout.skating_sports",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.paddleSports",
+  "eventTypeCode": "workout.paddling",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.rowing",
+  "eventTypeCode": "workout.rowing",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.sailing",
+  "eventTypeCode": "workout.sailing",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.surfingSports",
+  "eventTypeCode": "workout.surfing",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.swimming",
+  "eventTypeCode": "workout.swimming",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.underwaterDiving",
+  "eventTypeCode": "workout.underwater_diving",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.waterFitness",
+  "eventTypeCode": "workout.water_fitness",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.waterPolo",
+  "eventTypeCode": "workout.water_polo",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.waterSports",
+  "eventTypeCode": "workout.water_sports",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.boxing",
+  "eventTypeCode": "workout.boxing",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.kickboxing",
+  "eventTypeCode": "workout.kickboxing",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.martialArts",
+  "eventTypeCode": "workout.martial_arts",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.taiChi",
+  "eventTypeCode": "workout.tai_chi",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.wrestling",
+  "eventTypeCode": "workout.wrestling",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.other",
+  "eventTypeCode": "workout.other",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.dance",
+  "eventTypeCode": "workout.dance",
+  "availability": "deprecated",
+  "note": "deprecated Apple case; читаем для обратной совместимости"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.danceInspiredTraining",
+  "eventTypeCode": "workout.dance",
+  "availability": "deprecated",
+  "note": "deprecated Apple case; читаем для обратной совместимости"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.mixedMetabolicCardioTraining",
+  "eventTypeCode": "workout.mixed_cardio",
+  "availability": "deprecated",
+  "note": "deprecated Apple case; читаем для обратной совместимости"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.swimBikeRun",
+  "eventTypeCode": "workout.triathlon",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Apple Health",
+  "entity": "HKWorkout",
+  "sourceEventType": "HKWorkoutActivityType.transition",
+  "eventTypeCode": "workout.transition",
+  "availability": "напрямую",
+  "note": "точный HKWorkoutActivityType"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "SleepSessionRecord",
+  "sourceEventType": "без отдельного main / nap поля",
+  "eventTypeCode": "sleep.unspecified",
+  "availability": "напрямую",
+  "note": "сессия сна есть, подтип main / nap не стандартирован"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_OTHER_WORKOUT",
+  "eventTypeCode": "workout.other",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_BADMINTON",
+  "eventTypeCode": "workout.badminton",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_BASEBALL",
+  "eventTypeCode": "workout.baseball",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_BASKETBALL",
+  "eventTypeCode": "workout.basketball",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_BIKING",
+  "eventTypeCode": "workout.cycling",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_BIKING_STATIONARY",
+  "eventTypeCode": "workout.indoor_cycling",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_BOOT_CAMP",
+  "eventTypeCode": "workout.boot_camp",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_BOXING",
+  "eventTypeCode": "workout.boxing",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_CALISTHENICS",
+  "eventTypeCode": "workout.calisthenics",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_CRICKET",
+  "eventTypeCode": "workout.cricket",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_DANCING",
+  "eventTypeCode": "workout.dance",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_ELLIPTICAL",
+  "eventTypeCode": "workout.elliptical",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_EXERCISE_CLASS",
+  "eventTypeCode": "workout.exercise_class",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_FENCING",
+  "eventTypeCode": "workout.fencing",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_FOOTBALL_AMERICAN",
+  "eventTypeCode": "workout.american_football",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_FOOTBALL_AUSTRALIAN",
+  "eventTypeCode": "workout.australian_football",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_FRISBEE_DISC",
+  "eventTypeCode": "workout.disc_sports",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_GOLF",
+  "eventTypeCode": "workout.golf",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_GUIDED_BREATHING",
+  "eventTypeCode": "session.breathing",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_GYMNASTICS",
+  "eventTypeCode": "workout.gymnastics",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_HANDBALL",
+  "eventTypeCode": "workout.handball",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_HIGH_INTENSITY_INTERVAL_TRAINING",
+  "eventTypeCode": "workout.hiit",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_HIKING",
+  "eventTypeCode": "workout.hiking",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_ICE_HOCKEY",
+  "eventTypeCode": "workout.ice_hockey",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_ICE_SKATING",
+  "eventTypeCode": "workout.ice_skating",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_MARTIAL_ARTS",
+  "eventTypeCode": "workout.martial_arts",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_PADDLING",
+  "eventTypeCode": "workout.paddling",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_PARAGLIDING",
+  "eventTypeCode": "workout.paragliding",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_PILATES",
+  "eventTypeCode": "workout.pilates",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_RACQUETBALL",
+  "eventTypeCode": "workout.racquetball",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_ROCK_CLIMBING",
+  "eventTypeCode": "workout.climbing",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_ROLLER_HOCKEY",
+  "eventTypeCode": "workout.roller_hockey",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_ROWING",
+  "eventTypeCode": "workout.rowing",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_ROWING_MACHINE",
+  "eventTypeCode": "workout.rowing_machine",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_RUGBY",
+  "eventTypeCode": "workout.rugby",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_RUNNING",
+  "eventTypeCode": "workout.running",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_RUNNING_TREADMILL",
+  "eventTypeCode": "workout.treadmill_running",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_SAILING",
+  "eventTypeCode": "workout.sailing",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_SCUBA_DIVING",
+  "eventTypeCode": "workout.scuba_diving",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_SKATING",
+  "eventTypeCode": "workout.skating",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_SKIING",
+  "eventTypeCode": "workout.skiing",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_SNOWBOARDING",
+  "eventTypeCode": "workout.snowboarding",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_SNOWSHOEING",
+  "eventTypeCode": "workout.snowshoeing",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_SOCCER",
+  "eventTypeCode": "workout.soccer",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_SOFTBALL",
+  "eventTypeCode": "workout.softball",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_SQUASH",
+  "eventTypeCode": "workout.squash",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_STAIR_CLIMBING",
+  "eventTypeCode": "workout.stair_climbing",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_STAIR_CLIMBING_MACHINE",
+  "eventTypeCode": "workout.stair_climbing",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_STRENGTH_TRAINING",
+  "eventTypeCode": "workout.strength",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_STRETCHING",
+  "eventTypeCode": "workout.stretching",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_SURFING",
+  "eventTypeCode": "workout.surfing",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_SWIMMING_OPEN_WATER",
+  "eventTypeCode": "workout.swimming_open_water",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_SWIMMING_POOL",
+  "eventTypeCode": "workout.swimming_pool",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_TABLE_TENNIS",
+  "eventTypeCode": "workout.table_tennis",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_TENNIS",
+  "eventTypeCode": "workout.tennis",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_VOLLEYBALL",
+  "eventTypeCode": "workout.volleyball",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_WALKING",
+  "eventTypeCode": "workout.walking",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_WATER_POLO",
+  "eventTypeCode": "workout.water_polo",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_WEIGHTLIFTING",
+  "eventTypeCode": "workout.weightlifting",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_WHEELCHAIR",
+  "eventTypeCode": "workout.wheelchair",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "ExerciseSessionRecord",
+  "sourceEventType": "EXERCISE_TYPE_YOGA",
+  "eventTypeCode": "workout.yoga",
+  "availability": "напрямую",
+  "note": "точная константа AndroidX"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "MindfulnessSessionRecord",
+  "sourceEventType": "MEDITATION",
+  "eventTypeCode": "session.meditation",
+  "availability": "ограниченно",
+  "note": "API 36 или Android U Extensions 15"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "MindfulnessSessionRecord",
+  "sourceEventType": "BREATHING",
+  "eventTypeCode": "session.breathing",
+  "availability": "ограниченно",
+  "note": "API 36 или Android U Extensions 15"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "MindfulnessSessionRecord",
+  "sourceEventType": "MUSIC",
+  "eventTypeCode": "session.music",
+  "availability": "ограниченно",
+  "note": "API 36 или Android U Extensions 15"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "MindfulnessSessionRecord",
+  "sourceEventType": "MOVEMENT",
+  "eventTypeCode": "session.movement",
+  "availability": "ограниченно",
+  "note": "API 36 или Android U Extensions 15"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "MindfulnessSessionRecord",
+  "sourceEventType": "UNGUIDED",
+  "eventTypeCode": "session.unguided",
+  "availability": "ограниченно",
+  "note": "API 36 или Android U Extensions 15"
+ },
+ {
+  "source": "Health Connect",
+  "entity": "MindfulnessSessionRecord",
+  "sourceEventType": "UNKNOWN",
+  "eventTypeCode": "session.unspecified",
+  "availability": "ограниченно",
+  "note": "API 36 или Android U Extensions 15"
+ },
+ {
+  "source": "Oura API",
+  "entity": "PublicSleep",
+  "sourceEventType": "sleep",
+  "eventTypeCode": "sleep.unspecified",
+  "availability": "напрямую",
+  "note": "подтверждённый короткий сон или nap; main/nap не следует из значения"
+ },
+ {
+  "source": "Oura API",
+  "entity": "PublicSleep",
+  "sourceEventType": "long_sleep",
+  "eventTypeCode": "sleep.main",
+  "availability": "напрямую",
+  "note": "сон >3 ч, автоматически участвует в дневных score"
+ },
+ {
+  "source": "Oura API",
+  "entity": "PublicSleep",
+  "sourceEventType": "late_nap",
+  "eventTypeCode": "sleep.nap",
+  "availability": "напрямую",
+  "note": "подтверждённый nap, завершившийся после смены sleep day"
+ },
+ {
+  "source": "Oura API",
+  "entity": "PublicSleep",
+  "sourceEventType": "rest",
+  "eventTypeCode": "—",
+  "availability": "напрямую",
+  "note": "ложно распознанный сон отклонён пользователем — event не создаём"
+ },
+ {
+  "source": "Oura API",
+  "entity": "PublicSleep",
+  "sourceEventType": "deleted",
+  "eventTypeCode": "—",
+  "availability": "напрямую",
+  "note": "удаление записи — удаляем/архивируем ранее импортированный event"
+ },
+ {
+  "source": "Oura API",
+  "entity": "PublicSession / PublicMomentType",
+  "sourceEventType": "breathing",
+  "eventTypeCode": "session.breathing",
+  "availability": "напрямую",
+  "note": "точный enum OpenAPI"
+ },
+ {
+  "source": "Oura API",
+  "entity": "PublicSession / PublicMomentType",
+  "sourceEventType": "meditation",
+  "eventTypeCode": "session.meditation",
+  "availability": "напрямую",
+  "note": "точный enum OpenAPI"
+ },
+ {
+  "source": "Oura API",
+  "entity": "PublicSession / PublicMomentType",
+  "sourceEventType": "nap",
+  "eventTypeCode": "sleep.nap",
+  "availability": "напрямую",
+  "note": "точный enum OpenAPI"
+ },
+ {
+  "source": "Oura API",
+  "entity": "PublicSession / PublicMomentType",
+  "sourceEventType": "relaxation",
+  "eventTypeCode": "session.relaxation",
+  "availability": "напрямую",
+  "note": "точный enum OpenAPI"
+ },
+ {
+  "source": "Oura API",
+  "entity": "PublicSession / PublicMomentType",
+  "sourceEventType": "rest",
+  "eventTypeCode": "session.rest",
+  "availability": "напрямую",
+  "note": "точный enum OpenAPI"
+ },
+ {
+  "source": "Oura API",
+  "entity": "PublicSession / PublicMomentType",
+  "sourceEventType": "body_status",
+  "eventTypeCode": "session.body_status",
+  "availability": "напрямую",
+  "note": "точный enum OpenAPI"
+ },
+ {
+  "source": "Oura API",
+  "entity": "PublicWorkout",
+  "sourceEventType": "activity: string",
+  "eventTypeCode": "workout.other",
+  "availability": "динамический маппинг",
+  "note": "OpenAPI не публикует enum activity: исходную строку сохраняем и постепенно добавляем правила"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Archery",
+  "eventTypeCode": "workout.archery",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Assault Bike",
+  "eventTypeCode": "workout.indoor_cycling",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Australian Rules Football",
+  "eventTypeCode": "workout.australian_football",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Babywearing",
+  "eventTypeCode": "activity.babywearing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Badminton",
+  "eventTypeCode": "workout.badminton",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Ballet",
+  "eventTypeCode": "workout.ballet",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Barre",
+  "eventTypeCode": "workout.barre",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Barre3",
+  "eventTypeCode": "workout.barre",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Barry's",
+  "eventTypeCode": "workout.barry_s",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Bartending",
+  "eventTypeCode": "activity.bartending",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Baseball",
+  "eventTypeCode": "workout.baseball",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Basketball",
+  "eventTypeCode": "workout.basketball",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Billiards",
+  "eventTypeCode": "workout.billiards",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Bodybuilding",
+  "eventTypeCode": "workout.bodybuilding",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Bouldering",
+  "eventTypeCode": "workout.bouldering",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Bowling",
+  "eventTypeCode": "workout.bowling",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Box Fitness",
+  "eventTypeCode": "workout.boxing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Boxing",
+  "eventTypeCode": "workout.boxing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Breakdancing",
+  "eventTypeCode": "workout.breakdancing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Caddying",
+  "eventTypeCode": "activity.caddying",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Canoeing",
+  "eventTypeCode": "workout.canoeing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Cheerleading",
+  "eventTypeCode": "activity.cheerleading",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Chess",
+  "eventTypeCode": "activity.chess",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Circus Arts",
+  "eventTypeCode": "activity.circus_arts",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Cleaning",
+  "eventTypeCode": "activity.cleaning",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Climber",
+  "eventTypeCode": "workout.stair_climbing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Coaching",
+  "eventTypeCode": "activity.coaching",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Commuting",
+  "eventTypeCode": "activity.commuting",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Cooking",
+  "eventTypeCode": "activity.cooking",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Cricket",
+  "eventTypeCode": "workout.cricket",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Cross Country Skiing",
+  "eventTypeCode": "workout.cross_country_skiing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Curling",
+  "eventTypeCode": "workout.curling",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Cycling",
+  "eventTypeCode": "workout.cycling",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Dance",
+  "eventTypeCode": "workout.dance",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Darts",
+  "eventTypeCode": "workout.darts",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Dedicated Parenting",
+  "eventTypeCode": "activity.dedicated_parenting",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Disc Golf",
+  "eventTypeCode": "workout.disc_golf",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Diving",
+  "eventTypeCode": "workout.diving",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Dog Walking",
+  "eventTypeCode": "activity.dog_walking",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Driving",
+  "eventTypeCode": "activity.driving",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Duathlon",
+  "eventTypeCode": "workout.duathlon",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Elliptical",
+  "eventTypeCode": "workout.elliptical",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "F45 Training",
+  "eventTypeCode": "workout.functional_fitness",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Fencing",
+  "eventTypeCode": "workout.fencing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Field Hockey",
+  "eventTypeCode": "workout.field_hockey",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Firefighting",
+  "eventTypeCode": "activity.firefighting",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Fishing",
+  "eventTypeCode": "workout.fishing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Football",
+  "eventTypeCode": "workout.american_football",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Freediving",
+  "eventTypeCode": "workout.freediving",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Functional Fitness",
+  "eventTypeCode": "workout.functional_fitness",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Gaelic Football",
+  "eventTypeCode": "workout.gaelic_football",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Gaming",
+  "eventTypeCode": "activity.gaming",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Golf",
+  "eventTypeCode": "workout.golf",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Gymnastics",
+  "eventTypeCode": "workout.gymnastics",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Handball",
+  "eventTypeCode": "workout.handball",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "High-Stress Work",
+  "eventTypeCode": "activity.high_stress_work",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "HIIT",
+  "eventTypeCode": "workout.hiit",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Hiking",
+  "eventTypeCode": "workout.hiking",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Horseback Riding",
+  "eventTypeCode": "workout.equestrian",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Hot Yoga",
+  "eventTypeCode": "workout.hot_yoga",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Hurling/Camogie",
+  "eventTypeCode": "workout.hurling_camogie",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Ice Hockey",
+  "eventTypeCode": "workout.ice_hockey",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Ice Skating",
+  "eventTypeCode": "workout.ice_skating",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Inline Skating",
+  "eventTypeCode": "workout.inline_skating",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Jiu Jitsu",
+  "eventTypeCode": "workout.jiu_jitsu",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Judo",
+  "eventTypeCode": "workout.judo",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Jumping Rope",
+  "eventTypeCode": "workout.jumping_rope",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Kayaking",
+  "eventTypeCode": "workout.kayaking",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Kickboxing",
+  "eventTypeCode": "workout.kickboxing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Kite boarding",
+  "eventTypeCode": "workout.kite_boarding",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Lacrosse",
+  "eventTypeCode": "workout.lacrosse",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Manual Labor",
+  "eventTypeCode": "activity.manual_labor",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Martial Arts",
+  "eventTypeCode": "workout.martial_arts",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Motocross",
+  "eventTypeCode": "workout.motocross",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Motor Racing",
+  "eventTypeCode": "workout.motor_racing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Mountain Biking",
+  "eventTypeCode": "workout.mountain_biking",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Mountaineering",
+  "eventTypeCode": "workout.mountaineering",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Muay Thai",
+  "eventTypeCode": "workout.muay_thai",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Musical Performance",
+  "eventTypeCode": "activity.musical_performance",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Netball",
+  "eventTypeCode": "workout.netball",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Nordic Walking",
+  "eventTypeCode": "workout.nordic_walking",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Nursing a Baby",
+  "eventTypeCode": "activity.nursing_a_baby",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Obstacle Course Racing",
+  "eventTypeCode": "workout.obstacle_course_racing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Operations - Flying",
+  "eventTypeCode": "activity.operations_flying",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Operations - Medical",
+  "eventTypeCode": "activity.operations_medical",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Operations - Tactical",
+  "eventTypeCode": "activity.operations_tactical",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Operations - Water",
+  "eventTypeCode": "activity.operations_water",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Other",
+  "eventTypeCode": "workout.other",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Paddle Tennis",
+  "eventTypeCode": "workout.paddle_tennis",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Paddleboarding",
+  "eventTypeCode": "workout.paddleboarding",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Padel",
+  "eventTypeCode": "workout.padel",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Paintball",
+  "eventTypeCode": "workout.paintball",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Parkour",
+  "eventTypeCode": "workout.parkour",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Pickleball",
+  "eventTypeCode": "workout.pickleball",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Pilates",
+  "eventTypeCode": "workout.pilates",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Polo",
+  "eventTypeCode": "workout.polo",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Poker",
+  "eventTypeCode": "activity.poker",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Powerlifting",
+  "eventTypeCode": "workout.powerlifting",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Public Speaking",
+  "eventTypeCode": "activity.public_speaking",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Pumping",
+  "eventTypeCode": "activity.pumping",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Racquetball",
+  "eventTypeCode": "workout.racquetball",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Race Walking",
+  "eventTypeCode": "workout.race_walking",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Refereeing",
+  "eventTypeCode": "activity.refereeing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Reformer Pilates",
+  "eventTypeCode": "workout.reformer_pilates",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Rock Climbing",
+  "eventTypeCode": "workout.climbing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Roller Hockey",
+  "eventTypeCode": "workout.roller_hockey",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Rowing",
+  "eventTypeCode": "workout.rowing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Rucking",
+  "eventTypeCode": "workout.rucking",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Rugby",
+  "eventTypeCode": "workout.rugby",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Running",
+  "eventTypeCode": "workout.running",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Sailing",
+  "eventTypeCode": "workout.sailing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Scootering",
+  "eventTypeCode": "workout.scootering",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Sculpt Yoga",
+  "eventTypeCode": "workout.sculpt_yoga",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Skateboarding",
+  "eventTypeCode": "workout.skateboarding",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Ski Touring",
+  "eventTypeCode": "workout.ski_touring",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Skiing",
+  "eventTypeCode": "workout.skiing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Skydiving",
+  "eventTypeCode": "workout.skydiving",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Snowshoeing",
+  "eventTypeCode": "workout.snowshoeing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Snow Shoveling",
+  "eventTypeCode": "activity.snow_shoveling",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Snowboarding",
+  "eventTypeCode": "workout.snowboarding",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Soccer",
+  "eventTypeCode": "workout.soccer",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Softball",
+  "eventTypeCode": "workout.softball",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Solidcore",
+  "eventTypeCode": "workout.pilates",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Spikeball",
+  "eventTypeCode": "workout.spikeball",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Spin",
+  "eventTypeCode": "workout.indoor_cycling",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Sport Fishing",
+  "eventTypeCode": "workout.sport_fishing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Sprint Training",
+  "eventTypeCode": "workout.sprint_training",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Squash",
+  "eventTypeCode": "workout.squash",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Stadium Steps",
+  "eventTypeCode": "workout.stair_climbing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Stage Performance",
+  "eventTypeCode": "activity.stage_performance",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Stairmaster",
+  "eventTypeCode": "workout.stair_climbing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Stroller Jogging",
+  "eventTypeCode": "workout.stroller_jogging",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Stroller Walking",
+  "eventTypeCode": "workout.stroller_walking",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Surfing",
+  "eventTypeCode": "workout.surfing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Swimming",
+  "eventTypeCode": "workout.swimming",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Table Tennis/Ping Pong",
+  "eventTypeCode": "workout.table_tennis",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Taekwondo",
+  "eventTypeCode": "workout.taekwondo",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Tennis",
+  "eventTypeCode": "workout.tennis",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Thrill Ride",
+  "eventTypeCode": "activity.thrill_ride",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Toddler wearing",
+  "eventTypeCode": "activity.toddler_wearing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Track & Field",
+  "eventTypeCode": "workout.track_and_field",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Trail Running",
+  "eventTypeCode": "workout.trail_running",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Trampoline",
+  "eventTypeCode": "workout.trampoline",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Triathlon",
+  "eventTypeCode": "workout.triathlon",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Ultimate",
+  "eventTypeCode": "workout.ultimate",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Unicycling",
+  "eventTypeCode": "workout.unicycling",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Volleyball",
+  "eventTypeCode": "workout.volleyball",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Wakeboarding",
+  "eventTypeCode": "workout.wakeboarding",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Walking",
+  "eventTypeCode": "workout.walking",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Watching Sports",
+  "eventTypeCode": "activity.watching_sports",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Water Polo",
+  "eventTypeCode": "workout.water_polo",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Water Skiing",
+  "eventTypeCode": "workout.water_skiing",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Weightlifting",
+  "eventTypeCode": "workout.weightlifting",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Wheelchair Pushing",
+  "eventTypeCode": "workout.wheelchair",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "WHOOP Labs",
+  "eventTypeCode": "activity.whoop_labs",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Winter Biathlon",
+  "eventTypeCode": "workout.winter_biathlon",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Wrestling",
+  "eventTypeCode": "workout.wrestling",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Yard Work/Gardening",
+  "eventTypeCode": "activity.yard_work_gardening",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Workout / activity",
+  "sourceEventType": "Yoga",
+  "eventTypeCode": "workout.yoga",
+  "availability": "через маппинг",
+  "note": "тип опубликован в полном списке WHOOP app; sport_id/name сохраняем"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Acupuncture",
+  "eventTypeCode": "session.acupuncture",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Air Compression",
+  "eventTypeCode": "session.air_compression",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Air Compression (Normatec)",
+  "eventTypeCode": "session.air_compression",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Breathwork",
+  "eventTypeCode": "session.breathwork",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Bright Light Therapy",
+  "eventTypeCode": "session.bright_light_therapy",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Chiropractor",
+  "eventTypeCode": "session.chiropractor",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Cuddling with Child",
+  "eventTypeCode": "session.cuddling_with_child",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Cold Shower",
+  "eventTypeCode": "session.cold_shower",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Contrast Therapy",
+  "eventTypeCode": "session.contrast_therapy",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Dry Sauna",
+  "eventTypeCode": "session.dry_sauna",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Foam Rolling",
+  "eventTypeCode": "session.foam_rolling",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Guided Breathing - Increase Alertness",
+  "eventTypeCode": "session.guided_breathing_increase_alertness",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Guided Breathing - Increase Relaxation",
+  "eventTypeCode": "session.guided_breathing_increase_relaxation",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Hot Tub",
+  "eventTypeCode": "session.hot_tub",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Ice Bath",
+  "eventTypeCode": "session.ice_bath",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Infared Sauna",
+  "eventTypeCode": "session.infrared_sauna",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Knitting",
+  "eventTypeCode": "session.knitting",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Massage Therapy",
+  "eventTypeCode": "session.massage_therapy",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Meditation",
+  "eventTypeCode": "session.meditation",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Non-sleep, deep rest",
+  "eventTypeCode": "session.nsdr",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Other - Recovery",
+  "eventTypeCode": "session.other",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Percussive Massage",
+  "eventTypeCode": "session.percussive_massage",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Percussive Massage (Hypervolt)",
+  "eventTypeCode": "session.percussive_massage",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Playing with Child",
+  "eventTypeCode": "session.playing_with_child",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "QiGong",
+  "eventTypeCode": "session.qi_gong",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Red Light Therapy",
+  "eventTypeCode": "session.red_light_therapy",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Restorative Yoga",
+  "eventTypeCode": "session.restorative_yoga",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Sound healing",
+  "eventTypeCode": "session.sound_healing",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Steam Room",
+  "eventTypeCode": "session.steam_room",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Stretching",
+  "eventTypeCode": "session.stretching",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Tai Chi",
+  "eventTypeCode": "session.tai_chi",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Recovery activity",
+  "sourceEventType": "Warm Bath",
+  "eventTypeCode": "session.warm_bath",
+  "availability": "ограниченно",
+  "note": "тип есть в WHOOP app; отдельного Session API нет, проверяем приход в Workout payload"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Sleep",
+  "sourceEventType": "nap = false",
+  "eventTypeCode": "sleep.main",
+  "availability": "напрямую",
+  "note": "явный nap-флаг"
+ },
+ {
+  "source": "WHOOP",
+  "entity": "Sleep",
+  "sourceEventType": "nap = true",
+  "eventTypeCode": "sleep.nap",
+  "availability": "напрямую",
+  "note": "явный nap-флаг"
+ },
+ {
+  "source": "Garmin API",
+  "entity": "Health API",
+  "sourceEventType": "Sleep",
+  "eventTypeCode": "sleep.unspecified",
+  "availability": "ограниченно",
+  "note": "public page подтверждает Sleep, но main/nap и полный schema доступны партнёрам"
+ },
+ {
+  "source": "Garmin API",
+  "entity": "Activity API",
+  "sourceEventType": "Running",
+  "eventTypeCode": "workout.running",
+  "availability": "подтверждено публично",
+  "note": "названо на публичной Activity API-странице; интеграция партнёрская"
+ },
+ {
+  "source": "Garmin API",
+  "entity": "Activity API",
+  "sourceEventType": "Cycling",
+  "eventTypeCode": "workout.cycling",
+  "availability": "подтверждено публично",
+  "note": "названо на публичной Activity API-странице; интеграция партнёрская"
+ },
+ {
+  "source": "Garmin API",
+  "entity": "Activity API",
+  "sourceEventType": "Swimming",
+  "eventTypeCode": "workout.swimming",
+  "availability": "подтверждено публично",
+  "note": "названо на публичной Activity API-странице; интеграция партнёрская"
+ },
+ {
+  "source": "Garmin API",
+  "entity": "Activity API",
+  "sourceEventType": "Yoga",
+  "eventTypeCode": "workout.yoga",
+  "availability": "подтверждено публично",
+  "note": "названо на публичной Activity API-странице; интеграция партнёрская"
+ },
+ {
+  "source": "Garmin API",
+  "entity": "Activity API",
+  "sourceEventType": "Strength Training",
+  "eventTypeCode": "workout.strength",
+  "availability": "подтверждено публично",
+  "note": "названо на публичной Activity API-странице; интеграция партнёрская"
+ },
+ {
+  "source": "Garmin API",
+  "entity": "Activity API",
+  "sourceEventType": "прочие activity types",
+  "eventTypeCode": "—",
+  "availability": "не опубликовано",
+  "note": "полный enum нельзя честно перечислить до доступа к partner schema"
+ }
+]

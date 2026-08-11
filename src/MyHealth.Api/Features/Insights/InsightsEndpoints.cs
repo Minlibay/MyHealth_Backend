@@ -82,6 +82,8 @@ public static class InsightsEndpoints
         MetricType.HeartRate,
         MetricType.Hrv,
         MetricType.Sleep,
+        // Нужен для ночных показателей (минимум SpO₂ и просадки).
+        MetricType.BloodOxygen,
         MetricType.RespiratoryRate,
         MetricType.BodyTemperature,
         MetricType.Weight,
@@ -111,27 +113,17 @@ public static class InsightsEndpoints
                         u.KcalGoal))
                     .FirstOrDefaultAsync() ?? new Goals(8, 2, null);
 
-                var samples = await db.Samples.AsNoTracking()
-                    .Where(s => s.UserId == userId &&
-                                s.RecordedAt >= from &&
-                                TrackedMetrics.Contains(s.Metric))
-                    .Select(s => new Pt(s.Metric, s.Value, s.RecordedAt))
-                    .ToListAsync();
+                var samples = await LoadPointsAsync(db, userId.Value, from);
 
                 // Сессии сна за 30 дней: последняя ночь + регулярность +
                 // база ночного пульса покоя.
-                var sleepSessions = await db.SleepSessions.AsNoTracking()
-                    .Where(s => s.UserId == userId && s.EndedAt >= from)
-                    .OrderByDescending(s => s.EndedAt)
-                    .ToListAsync();
+                var sleepSessions = await LoadSleepAsync(db, userId.Value, from);
                 var lastSleep = sleepSessions.FirstOrDefault(
                     s => s.EndedAt >= now.AddDays(-2));
 
                 // Тренировки за 28 дней — для Strain и тренировочной нагрузки.
-                var workouts = await db.Workouts.AsNoTracking()
-                    .Where(w => w.UserId == userId && w.StartedAt >= now.AddDays(-28))
-                    .Select(w => new WorkoutPt(w.StartedAt, w.EndedAt, w.EnergyKcal))
-                    .ToListAsync();
+                var workouts = await LoadWorkoutsAsync(
+                    db, userId.Value, now.AddDays(-28));
 
                 var byMetric = samples
                     .GroupBy(s => s.Metric)
@@ -220,22 +212,14 @@ public static class InsightsEndpoints
                 if (userId is null) return Results.Unauthorized();
 
                 var now = DateTimeOffset.UtcNow;
-                var samples = await db.Samples.AsNoTracking()
-                    .Where(s => s.UserId == userId &&
-                                s.RecordedAt >= now.AddDays(-14) &&
-                                TrackedMetrics.Contains(s.Metric))
-                    .Select(s => new Pt(s.Metric, s.Value, s.RecordedAt))
-                    .ToListAsync();
+                var samples = await LoadPointsAsync(db, userId.Value, now.AddDays(-14));
                 var byMetric = samples
                     .GroupBy(s => s.Metric)
                     .ToDictionary(g => g.Key,
                         g => g.OrderBy(s => s.RecordedAt).ToList());
 
-                var workouts = await db.Workouts.AsNoTracking()
-                    .Where(w => w.UserId == userId &&
-                                w.StartedAt >= now.AddDays(-14))
-                    .Select(w => new WorkoutPt(w.StartedAt, w.EndedAt, w.EnergyKcal))
-                    .ToListAsync();
+                var workouts = await LoadWorkoutsAsync(
+                    db, userId.Value, now.AddDays(-14));
                 var thisWeek = workouts.Where(w => w.Start >= now.AddDays(-7)).ToList();
                 var lastWeek = workouts.Where(w => w.Start < now.AddDays(-7)).ToList();
 
@@ -252,6 +236,92 @@ public static class InsightsEndpoints
             .RequireAuthorization();
 
         return app;
+    }
+
+    // ===== Чтение новой схемы трекинга =====
+
+    /// <summary>Значения отслеживаемых показателей из observations.</summary>
+    private static async Task<List<Pt>> LoadPointsAsync(
+        AppDbContext db, Guid userId, DateTimeOffset from)
+    {
+        var codes = TrackedMetrics.Select(MetricCodeMap.ToCode).ToList();
+        var rows = await db.Observations.AsNoTracking()
+            .Where(o => o.UserId == userId && o.StartAt >= from &&
+                        o.ValueNum != null && codes.Contains(o.MetricCode))
+            .Select(o => new { o.MetricCode, Value = o.ValueNum!.Value, o.StartAt })
+            .ToListAsync();
+
+        var result = new List<Pt>(rows.Count);
+        foreach (var r in rows)
+        {
+            var metric = MetricCodeMap.FromCode(r.MetricCode);
+            if (metric is not null) result.Add(new Pt(metric.Value, r.Value, r.StartAt));
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Сессии сна из событий sleep.* со стадиями — в прежней форме,
+    /// чтобы расчёты скоров не зависели от способа хранения.
+    /// </summary>
+    private static async Task<List<SleepSession>> LoadSleepAsync(
+        AppDbContext db, Guid userId, DateTimeOffset from)
+    {
+        var events = await db.Events.AsNoTracking()
+            .Where(e => e.UserId == userId &&
+                        e.EventTypeCode.StartsWith("sleep.") &&
+                        (e.EndAt ?? e.StartAt) >= from)
+            .OrderByDescending(e => e.EndAt ?? e.StartAt)
+            .ToListAsync();
+        if (events.Count == 0) return [];
+
+        var stages = await SleepEndpoints.LoadStagesAsync(db, events.Select(e => e.Id));
+        return events.Select(e => new SleepSession
+        {
+            Id = e.Id,
+            UserId = e.UserId,
+            StartedAt = e.StartAt,
+            EndedAt = e.EndAt ?? e.StartAt,
+            StagesJson = stages.TryGetValue(e.Id, out var json) ? json : "[]",
+            CreatedAt = e.CreatedAt,
+        }).ToList();
+    }
+
+    /// <summary>Тренировки из событий workout.* с калориями сессии.</summary>
+    private static async Task<List<WorkoutPt>> LoadWorkoutsAsync(
+        AppDbContext db, Guid userId, DateTimeOffset from)
+    {
+        var events = await db.Events.AsNoTracking()
+            .Where(e => e.UserId == userId &&
+                        e.EventTypeCode.StartsWith("workout.") &&
+                        e.StartAt >= from)
+            .Select(e => new { e.Id, e.StartAt, e.EndAt })
+            .ToListAsync();
+        if (events.Count == 0) return [];
+
+        var ids = events.Select(e => e.Id).ToList();
+        var links = await db.MeasurementEventLinks.AsNoTracking()
+            .Where(l => ids.Contains(l.EventId) && l.MeasurementType == "observation")
+            .Select(l => new { l.EventId, l.MeasurementId })
+            .ToListAsync();
+        var obsIds = links.Select(l => l.MeasurementId).ToList();
+        var kcal = (await db.Observations.AsNoTracking()
+                .Where(o => obsIds.Contains(o.Id) &&
+                            o.MetricCode == "activity.calories.session" &&
+                            o.ValueNum != null)
+                .Select(o => new { o.Id, Value = o.ValueNum!.Value })
+                .ToListAsync())
+            .ToDictionary(o => o.Id, o => o.Value);
+        var byEvent = new Dictionary<Guid, double>();
+        foreach (var l in links)
+        {
+            if (kcal.TryGetValue(l.MeasurementId, out var v)) byEvent[l.EventId] = v;
+        }
+
+        return events.Select(e => new WorkoutPt(
+            e.StartAt,
+            e.EndAt ?? e.StartAt,
+            byEvent.TryGetValue(e.Id, out var v) ? v : null)).ToList();
     }
 
     // ===== Вспомогательные структуры =====

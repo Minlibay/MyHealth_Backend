@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MyHealth.Api.Common;
 using MyHealth.Api.Data;
 using MyHealth.Api.Domain;
+using MyHealth.Api.Domain.Tracking;
 using MyHealth.Api.Features.Metrics;
 
 namespace MyHealth.Api.Features.Workouts;
@@ -32,16 +33,21 @@ public record WorkoutDto(
     /// <summary>TRIMP по Эдвардсу: Σ минут в зоне × номер зоны.</summary>
     double? Trimp)
 {
+    /// <summary>Событие тренировки новой схемы в прежнем формате ответа.</summary>
     public static WorkoutDto From(
-        Workout w,
+        TrackedEvent ev,
+        double? energyKcal,
+        double? distanceMeters,
         List<(DateTimeOffset At, double Hr)>? hr = null,
         double hrMax = 190)
     {
-        var minutes = (w.EndedAt - w.StartedAt).TotalMinutes;
+        var startedAt = ev.StartAt;
+        var endedAt = ev.EndAt ?? ev.StartAt;
+        var minutes = (endedAt - startedAt).TotalMinutes;
         double? avg = null, max = null, trimp = null;
         List<double>? zones = null;
 
-        var points = hr?.Where(p => p.At >= w.StartedAt && p.At <= w.EndedAt)
+        var points = hr?.Where(p => p.At >= startedAt && p.At <= endedAt)
             .Select(p => p.Hr)
             .ToList();
         if (points is { Count: >= 2 })
@@ -69,8 +75,10 @@ public record WorkoutDto(
         }
 
         return new WorkoutDto(
-            w.Id, w.ActivityType, w.StartedAt, w.EndedAt, minutes,
-            w.EnergyKcal, w.DistanceMeters, w.Source,
+            ev.Id,
+            ev.EventName ?? ev.SourceEventType ?? ev.EventTypeCode,
+            startedAt, endedAt, minutes,
+            energyKcal, distanceMeters, TrackingStore.SourceString(ev.DeviceInstance),
             avg, max, zones, trimp);
     }
 }
@@ -83,7 +91,8 @@ public static class WorkoutsEndpoints
             .WithTags("Workouts")
             .RequireAuthorization();
 
-        // Пакетная загрузка тренировок. Идемпотентна по (UserId, ClientId).
+        // Пакетная загрузка тренировок в events новой схемы
+        // (калории и дистанция — как связанные значения показателей).
         group.MapPost("/", async (
             List<WorkoutUploadDto> items, ClaimsPrincipal principal, AppDbContext db) =>
         {
@@ -95,12 +104,21 @@ public static class WorkoutsEndpoints
                 .Where(i => i.ClientId is not null)
                 .Select(i => i.ClientId!)
                 .ToList();
-            var existing = await db.Workouts
-                .Where(w => w.UserId == userId && w.ClientId != null &&
-                            clientIds.Contains(w.ClientId))
-                .Select(w => w.ClientId!)
+            var existingSet = (await db.Events
+                .Where(e => e.UserId == userId && e.ClientId != null &&
+                            clientIds.Contains(e.ClientId))
+                .Select(e => e.ClientId!)
+                .ToListAsync()).ToHashSet();
+
+            var knownTypes = (await db.EventTypeDefinitions
+                .Select(t => t.EventTypeCode).ToListAsync()).ToHashSet();
+            var map = await db.SourceEventTypeMaps.AsNoTracking()
+                .Select(m => new { m.SourceEventType, m.EventTypeCode })
                 .ToListAsync();
-            var existingSet = existing.ToHashSet();
+            var bySourceType = map
+                .GroupBy(m => m.SourceEventType.ToLowerInvariant())
+                .ToDictionary(g => g.Key, g => g.First().EventTypeCode);
+            var store = new TrackingStore(db);
 
             var inserted = 0;
             var seen = new HashSet<string>();
@@ -110,17 +128,26 @@ public static class WorkoutsEndpoints
                     (existingSet.Contains(i.ClientId) || !seen.Add(i.ClientId)))
                     continue;
 
-                db.Workouts.Add(new Workout
+                var device = await store.ResolveDeviceAsync(userId.Value, i.Source);
+                var ev = new TrackedEvent
                 {
                     UserId = userId.Value,
-                    ActivityType = i.ActivityType,
-                    StartedAt = i.StartedAt,
-                    EndedAt = i.EndedAt,
-                    EnergyKcal = i.EnergyKcal,
-                    DistanceMeters = i.DistanceMeters,
-                    Source = i.Source,
+                    EventTypeCode = ResolveEventType(
+                        i.ActivityType, bySourceType, knownTypes),
+                    EventName = i.ActivityType,
+                    StartAt = i.StartedAt,
+                    EndAt = i.EndedAt,
+                    SourceEventType = i.ActivityType,
+                    DeviceInstanceId = device?.Id,
                     ClientId = i.ClientId,
-                });
+                };
+                db.Events.Add(ev);
+
+                if (i.EnergyKcal is double kcal)
+                    AddSessionMetric(db, ev, "activity.calories.session", kcal, "ккал");
+                if (i.DistanceMeters is double meters)
+                    AddSessionMetric(db, ev, "activity.distance.session", meters, "м");
+
                 inserted++;
             }
 
@@ -136,15 +163,43 @@ public static class WorkoutsEndpoints
             var userId = principal.GetUserId();
             if (userId is null) return Results.Unauthorized();
 
-            var q = db.Workouts.AsNoTracking().Where(w => w.UserId == userId);
-            if (from is not null) q = q.Where(w => w.StartedAt >= from);
-            if (to is not null) q = q.Where(w => w.StartedAt <= to);
+            var q = db.Events.AsNoTracking()
+                .Include(e => e.DeviceInstance)
+                .Where(e => e.UserId == userId &&
+                            e.EventTypeCode.StartsWith("workout."));
+            if (from is not null) q = q.Where(e => e.StartAt >= from);
+            if (to is not null) q = q.Where(e => e.StartAt <= to);
 
             var data = await q
-                .OrderByDescending(w => w.StartedAt)
+                .OrderByDescending(e => e.StartAt)
                 .Take(Math.Clamp(limit, 1, 1000))
                 .ToListAsync();
             if (data.Count == 0) return Results.Ok(Enumerable.Empty<WorkoutDto>());
+
+            // Калории и дистанция сессий — через связи измерение↔событие.
+            var ids = data.Select(e => e.Id).ToList();
+            var links = await db.MeasurementEventLinks.AsNoTracking()
+                .Where(l => ids.Contains(l.EventId) &&
+                            l.MeasurementType == "observation")
+                .Select(l => new { l.EventId, l.MeasurementId })
+                .ToListAsync();
+            var obsIds = links.Select(l => l.MeasurementId).ToList();
+            var sessionValues = await db.Observations.AsNoTracking()
+                .Where(o => obsIds.Contains(o.Id))
+                .Select(o => new { o.Id, o.MetricCode, o.ValueNum })
+                .ToListAsync();
+            var valueById = sessionValues.ToDictionary(o => o.Id);
+            var kcalByEvent = new Dictionary<Guid, double>();
+            var distByEvent = new Dictionary<Guid, double>();
+            foreach (var l in links)
+            {
+                if (!valueById.TryGetValue(l.MeasurementId, out var o) ||
+                    o.ValueNum is not double v) continue;
+                if (o.MetricCode == "activity.calories.session")
+                    kcalByEvent[l.EventId] = v;
+                else if (o.MetricCode == "activity.distance.session")
+                    distByEvent[l.EventId] = v;
+            }
 
             // Пульс за общее окно всех тренировок одним запросом —
             // для зон и TRIMP каждой тренировки.
@@ -156,20 +211,68 @@ public static class WorkoutsEndpoints
                 .FirstOrDefaultAsync();
             var hrMax = age is int a ? 220.0 - a : 190.0;
 
-            var minStart = data.Min(w => w.StartedAt);
-            var maxEnd = data.Max(w => w.EndedAt);
-            var hr = (await db.Samples.AsNoTracking()
-                    .Where(s => s.UserId == userId &&
-                                s.Metric == MetricType.HeartRate &&
-                                s.RecordedAt >= minStart && s.RecordedAt <= maxEnd)
-                    .Select(s => new { s.RecordedAt, s.Value })
+            var minStart = data.Min(e => e.StartAt);
+            var maxEnd = data.Max(e => e.EndAt ?? e.StartAt);
+            var hrCode = MetricCodeMap.ToCode(MetricType.HeartRate);
+            var hr = (await db.Observations.AsNoTracking()
+                    .Where(o => o.UserId == userId && o.MetricCode == hrCode &&
+                                o.ValueNum != null &&
+                                o.StartAt >= minStart && o.StartAt <= maxEnd)
+                    .Select(o => new { o.StartAt, Value = o.ValueNum!.Value })
                     .ToListAsync())
-                .Select(s => (s.RecordedAt, s.Value))
+                .Select(o => (o.StartAt, o.Value))
                 .ToList();
 
-            return Results.Ok(data.Select(w => WorkoutDto.From(w, hr, hrMax)));
+            return Results.Ok(data.Select(e => WorkoutDto.From(
+                e,
+                kcalByEvent.TryGetValue(e.Id, out var k) ? k : null,
+                distByEvent.TryGetValue(e.Id, out var d) ? d : null,
+                hr, hrMax)));
         });
 
         return app;
+    }
+
+    /// <summary>Значение показателя сессии, связанное с событием тренировки.</summary>
+    private static void AddSessionMetric(
+        AppDbContext db, TrackedEvent ev, string code, double value, string unit)
+    {
+        var obs = new Observation
+        {
+            UserId = ev.UserId,
+            MetricCode = code,
+            ValueNum = value,
+            Unit = unit,
+            StartAt = ev.StartAt,
+            EndAt = ev.EndAt,
+            DeviceInstanceId = ev.DeviceInstanceId,
+            ClientId = ev.ClientId is null ? null : $"{ev.ClientId}#{code}",
+        };
+        db.Observations.Add(obs);
+        db.MeasurementEventLinks.Add(new MeasurementEventLink
+        {
+            MeasurementId = obs.Id,
+            MeasurementType = "observation",
+            EventId = ev.Id,
+            LinkMethod = "source_explicit",
+        });
+    }
+
+    /// <summary>Тип активности источника → код события нашего реестра.</summary>
+    private static string ResolveEventType(
+        string activityType, Dictionary<string, string> map, HashSet<string> known)
+    {
+        var lower = activityType.ToLowerInvariant();
+        if (map.TryGetValue(lower, out var byExact) && known.Contains(byExact))
+            return byExact;
+
+        var candidate = $"workout.{lower}";
+        if (known.Contains(candidate)) return candidate;
+
+        foreach (var (source, code) in map)
+        {
+            if (source.EndsWith(lower) && known.Contains(code)) return code;
+        }
+        return "workout.unspecified";
     }
 }

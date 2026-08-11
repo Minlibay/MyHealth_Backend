@@ -13,6 +13,7 @@ using MyHealth.Api.Features.Integrations;
 using MyHealth.Api.Features.Metrics;
 using MyHealth.Api.Features.Sleep;
 using MyHealth.Api.Features.Tags;
+using MyHealth.Api.Features.Tracking;
 using MyHealth.Api.Features.User;
 using MyHealth.Api.Features.Workouts;
 
@@ -81,10 +82,18 @@ builder.Services.Configure<ForwardedHeadersOptions>(o =>
 
 var app = builder.Build();
 
-// Применяем миграции при старте (и в dev, и в проде — одно-инстансное развёртывание).
+// Применяем миграции при старте (и в dev, и в проде — одно-инстансное развёртывание),
+// затем загружаем справочники трекинга и переносим данные старой схемы.
 using (var scope = app.Services.CreateScope())
 {
-    scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.Migrate();
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var startupLogger = scope.ServiceProvider
+        .GetRequiredService<ILoggerFactory>().CreateLogger("Startup");
+    db.Database.Migrate();
+
+    var seedDir = Path.Combine(app.Environment.ContentRootPath, "Data", "Seed");
+    await RegistrySeeder.SeedAsync(db, startupLogger, seedDir);
+    await LegacyDataMigrator.MigrateAsync(db, startupLogger);
 }
 
 app.UseForwardedHeaders();
@@ -113,5 +122,6 @@ app.MapUserEndpoints();
 app.MapInsightEndpoints();
 app.MapTagEndpoints();
 app.MapGoogleHealthEndpoints();
+app.MapTrackingEndpoints();
 
 app.Run();

@@ -1,0 +1,903 @@
+[
+ {
+  "domain": "Пульс и сердце",
+  "metricCode": "cardio.hr.instant",
+  "name": "Пульс мгновенный",
+  "grain": "point",
+  "trigger": "continuous",
+  "derivation": "measured",
+  "episodes": "day · sleep · workout · walk",
+  "valueType": "num",
+  "unit": "уд/мин",
+  "vendors": {
+   "oura": true,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Пульс и сердце",
+  "metricCode": "cardio.hr.resting",
+  "name": "Пульс покоя (итог вендора)",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "sleep · day (метод у вендоров разный)",
+  "valueType": "num",
+  "unit": "уд/мин",
+  "vendors": {
+   "oura": true,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": true
+  }
+ },
+ {
+  "domain": "Пульс и сердце",
+  "metricCode": "cardio.hr.sleep.avg",
+  "name": "Средний пульс во сне",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "sleep",
+  "valueType": "num",
+  "unit": "уд/мин",
+  "vendors": {
+   "oura": true,
+   "garmin": true,
+   "appleWatch": false,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Пульс и сердце",
+  "metricCode": "cardio.hrv.rmssd",
+  "name": "ВСР rMSSD, ночная",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "sleep",
+  "valueType": "num",
+  "unit": "мс",
+  "vendors": {
+   "oura": true,
+   "garmin": true,
+   "appleWatch": false,
+   "whoop": true
+  }
+ },
+ {
+  "domain": "Пульс и сердце",
+  "metricCode": "cardio.hrv.sdnn",
+  "name": "ВСР по SDNN (Apple)",
+  "grain": "point",
+  "trigger": "opportunistic",
+  "derivation": "vendor_aggregate",
+  "episodes": "day",
+  "valueType": "num",
+  "unit": "мс",
+  "vendors": {
+   "oura": false,
+   "garmin": false,
+   "appleWatch": true,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Пульс и сердце",
+  "metricCode": "cardio.rr.intervals",
+  "name": "RR-интервалы",
+  "grain": "interval",
+  "trigger": "continuous",
+  "derivation": "measured",
+  "episodes": "sleep · workout",
+  "valueType": "json",
+  "unit": "мс",
+  "vendors": {
+   "oura": false,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Пульс и сердце",
+  "metricCode": "cardio.hr.zones.minutes",
+  "name": "Минуты в пульсовых зонах",
+  "grain": "session",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "workout",
+  "valueType": "json",
+  "unit": "мин",
+  "vendors": {
+   "oura": false,
+   "garmin": true,
+   "appleWatch": false,
+   "whoop": true
+  }
+ },
+ {
+  "domain": "Пульс и сердце",
+  "metricCode": "cardio.ecg.recording",
+  "name": "Запись ЭКГ",
+  "grain": "session",
+  "trigger": "on_demand",
+  "derivation": "measured",
+  "episodes": "day",
+  "valueType": "json",
+  "unit": "мВ",
+  "vendors": {
+   "oura": false,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Пульс и сердце",
+  "metricCode": "cardio.hr.walk.avg",
+  "name": "Пульс при ходьбе",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "walk",
+  "valueType": "num",
+  "unit": "уд/мин",
+  "vendors": {
+   "oura": false,
+   "garmin": false,
+   "appleWatch": true,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Пульс и сердце",
+  "metricCode": "cardio.hr.max.daily",
+  "name": "Пульс максимальный за сутки",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "day",
+  "valueType": "num",
+  "unit": "уд/мин",
+  "vendors": {
+   "oura": false,
+   "garmin": true,
+   "appleWatch": false,
+   "whoop": true
+  }
+ },
+ {
+  "domain": "Пульс и сердце",
+  "metricCode": "cardio.hr.min.daily",
+  "name": "Пульс минимальный за сутки",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "day · sleep",
+  "valueType": "num",
+  "unit": "уд/мин",
+  "vendors": {
+   "oura": false,
+   "garmin": true,
+   "appleWatch": false,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Пульс и сердце",
+  "metricCode": "cardio.hrr.60s",
+  "name": "Восстановление пульса за 1 мин",
+  "grain": "session",
+  "trigger": "on_demand",
+  "derivation": "measured",
+  "episodes": "workout",
+  "valueType": "num",
+  "unit": "уд/мин",
+  "vendors": {
+   "oura": false,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Пульс и сердце",
+  "metricCode": "cardio.vo2max",
+  "name": "VO2max",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_estimate",
+  "episodes": "day",
+  "valueType": "num",
+  "unit": "мл/кг/мин",
+  "vendors": {
+   "oura": false,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Сон",
+  "metricCode": "sleep.duration.total",
+  "name": "Длительность сна",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "sleep",
+  "valueType": "num",
+  "unit": "мин",
+  "vendors": {
+   "oura": true,
+   "garmin": true,
+   "appleWatch": false,
+   "whoop": true
+  }
+ },
+ {
+  "domain": "Сон",
+  "metricCode": "sleep.bedtime",
+  "name": "Отбой",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "sleep",
+  "valueType": "num",
+  "unit": "локальное время",
+  "vendors": {
+   "oura": true,
+   "garmin": true,
+   "appleWatch": false,
+   "whoop": true
+  }
+ },
+ {
+  "domain": "Сон",
+  "metricCode": "sleep.waketime",
+  "name": "Подъём",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "sleep",
+  "valueType": "num",
+  "unit": "локальное время",
+  "vendors": {
+   "oura": true,
+   "garmin": true,
+   "appleWatch": false,
+   "whoop": true
+  }
+ },
+ {
+  "domain": "Сон",
+  "metricCode": "sleep.efficiency",
+  "name": "Эффективность сна",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "sleep",
+  "valueType": "num",
+  "unit": "%",
+  "vendors": {
+   "oura": true,
+   "garmin": true,
+   "appleWatch": false,
+   "whoop": true
+  }
+ },
+ {
+  "domain": "Сон",
+  "metricCode": "sleep.latency",
+  "name": "Латентность засыпания",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "sleep",
+  "valueType": "num",
+  "unit": "мин",
+  "vendors": {
+   "oura": true,
+   "garmin": true,
+   "appleWatch": false,
+   "whoop": true
+  }
+ },
+ {
+  "domain": "Сон",
+  "metricCode": "sleep.stages",
+  "name": "Стадии сна",
+  "grain": "interval",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "sleep",
+  "valueType": "json",
+  "unit": "-",
+  "vendors": {
+   "oura": true,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Сон",
+  "metricCode": "sleep.awakenings",
+  "name": "Пробуждения",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "sleep",
+  "valueType": "num",
+  "unit": "шт ·",
+  "vendors": {
+   "oura": false,
+   "garmin": true,
+   "appleWatch": false,
+   "whoop": true
+  }
+ },
+ {
+  "domain": "Сон",
+  "metricCode": "sleep.time_in_bed",
+  "name": "Время в постели",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "sleep",
+  "valueType": "num",
+  "unit": "мин",
+  "vendors": {
+   "oura": true,
+   "garmin": true,
+   "appleWatch": false,
+   "whoop": true
+  }
+ },
+ {
+  "domain": "Сон",
+  "metricCode": "sleep.duration.by_stage",
+  "name": "Длительность по стадиям",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "sleep",
+  "valueType": "json",
+  "unit": "мин",
+  "vendors": {
+   "oura": true,
+   "garmin": true,
+   "appleWatch": false,
+   "whoop": true
+  }
+ },
+ {
+  "domain": "Сон",
+  "metricCode": "sleep.waso",
+  "name": "WASO — бодрствование после засыпания",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "sleep",
+  "valueType": "num",
+  "unit": "мин",
+  "vendors": {
+   "oura": false,
+   "garmin": true,
+   "appleWatch": false,
+   "whoop": true
+  }
+ },
+ {
+  "domain": "Активность и движение",
+  "metricCode": "activity.steps",
+  "name": "Шаги",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "day",
+  "valueType": "num",
+  "unit": "шт",
+  "vendors": {
+   "oura": true,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Активность и движение",
+  "metricCode": "activity.steps.series",
+  "name": "Шаги, внутридневной ряд",
+  "grain": "point",
+  "trigger": "continuous",
+  "derivation": "measured",
+  "episodes": "day",
+  "valueType": "num",
+  "unit": "шт",
+  "vendors": {
+   "oura": false,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Активность и движение",
+  "metricCode": "activity.intensity.minutes",
+  "name": "Минуты средней+высокой интенсивности",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "day",
+  "valueType": "num",
+  "unit": "мин",
+  "vendors": {
+   "oura": true,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Активность и движение",
+  "metricCode": "activity.distance",
+  "name": "Дистанция",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "day · workout",
+  "valueType": "num",
+  "unit": "м",
+  "vendors": {
+   "oura": true,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": true
+  }
+ },
+ {
+  "domain": "Активность и движение",
+  "metricCode": "activity.calories.active",
+  "name": "Активные калории",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "day",
+  "valueType": "num",
+  "unit": "ккал",
+  "vendors": {
+   "oura": true,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Активность и движение",
+  "metricCode": "activity.floors",
+  "name": "Этажи",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "day",
+  "valueType": "num",
+  "unit": "шт",
+  "vendors": {
+   "oura": false,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Активность и движение",
+  "metricCode": "activity.elevation.gain",
+  "name": "Набор высоты",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "day · workout",
+  "valueType": "num",
+  "unit": "м",
+  "vendors": {
+   "oura": false,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": true
+  }
+ },
+ {
+  "domain": "Активность и движение",
+  "metricCode": "activity.calories.basal",
+  "name": "Базальные калории",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_estimate",
+  "episodes": "day",
+  "valueType": "num",
+  "unit": "ккал",
+  "vendors": {
+   "oura": false,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Активность и движение",
+  "metricCode": "activity.calories.total",
+  "name": "Калории общие",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "day",
+  "valueType": "num",
+  "unit": "ккал",
+  "vendors": {
+   "oura": true,
+   "garmin": true,
+   "appleWatch": false,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Активность и движение",
+  "metricCode": "activity.intensity.minutes.detail",
+  "name": "Минуты по четырём уровням интенсивности",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "day",
+  "valueType": "json",
+  "unit": "мин",
+  "vendors": {
+   "oura": true,
+   "garmin": true,
+   "appleWatch": false,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Активность и движение",
+  "metricCode": "activity.met",
+  "name": "Уровень нагрузки (МЕТ)",
+  "grain": "point",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "day · workout",
+  "valueType": "num",
+  "unit": "МЕТ",
+  "vendors": {
+   "oura": false,
+   "garmin": true,
+   "appleWatch": false,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Активность и движение",
+  "metricCode": "activity.cadence",
+  "name": "Каденс",
+  "grain": "point",
+  "trigger": "continuous",
+  "derivation": "measured",
+  "episodes": "workout · walk",
+  "valueType": "num",
+  "unit": "шаг/мин",
+  "vendors": {
+   "oura": false,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Активность и движение",
+  "metricCode": "activity.speed",
+  "name": "Скорость",
+  "grain": "point",
+  "trigger": "continuous",
+  "derivation": "measured",
+  "episodes": "workout · walk",
+  "valueType": "num",
+  "unit": "м/с",
+  "vendors": {
+   "oura": false,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Активность и движение",
+  "metricCode": "activity.power",
+  "name": "Мощность",
+  "grain": "point",
+  "trigger": "continuous",
+  "derivation": "measured",
+  "episodes": "workout",
+  "valueType": "num",
+  "unit": "Вт",
+  "vendors": {
+   "oura": false,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Тренировки",
+  "metricCode": "activity.gps.track",
+  "name": "Маршрут",
+  "grain": "session",
+  "trigger": "continuous",
+  "derivation": "measured",
+  "episodes": "workout",
+  "valueType": "json",
+  "unit": "-",
+  "vendors": {
+   "oura": false,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Тренировки",
+  "metricCode": "activity.laps",
+  "name": "Круги и сплиты",
+  "grain": "session",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "workout",
+  "valueType": "json",
+  "unit": "-",
+  "vendors": {
+   "oura": false,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Тренировки",
+  "metricCode": "activity.calories.session",
+  "name": "Калории за сессию",
+  "grain": "session",
+  "trigger": "continuous",
+  "derivation": "vendor_estimate",
+  "episodes": "workout",
+  "valueType": "num",
+  "unit": "ккал",
+  "vendors": {
+   "oura": true,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": true
+  }
+ },
+ {
+  "domain": "Дыхание и кислород",
+  "metricCode": "respiratory.spo2",
+  "name": "SpO2",
+  "grain": "point",
+  "trigger": "continuous",
+  "derivation": "measured",
+  "episodes": "sleep",
+  "valueType": "num",
+  "unit": "%",
+  "vendors": {
+   "oura": true,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": true
+  }
+ },
+ {
+  "domain": "Дыхание и кислород",
+  "metricCode": "respiratory.spo2",
+  "name": "SpO2 по кнопке",
+  "grain": "point",
+  "trigger": "on_demand",
+  "derivation": "measured",
+  "episodes": "day",
+  "valueType": "num",
+  "unit": "%",
+  "vendors": {
+   "oura": false,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Дыхание и кислород",
+  "metricCode": "respiratory.rate",
+  "name": "Частота дыхания",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_aggregate",
+  "episodes": "sleep · day",
+  "valueType": "num",
+  "unit": "вдох/мин",
+  "vendors": {
+   "oura": true,
+   "garmin": true,
+   "appleWatch": true,
+   "whoop": true
+  }
+ },
+ {
+  "domain": "Температура",
+  "metricCode": "body.temp.skin.abs",
+  "name": "Температура кожи, абсолют",
+  "grain": "point",
+  "trigger": "continuous",
+  "derivation": "measured",
+  "episodes": "sleep · day",
+  "valueType": "num",
+  "unit": "°C",
+  "vendors": {
+   "oura": false,
+   "garmin": false,
+   "appleWatch": true,
+   "whoop": true
+  }
+ },
+ {
+  "domain": "Температура",
+  "metricCode": "body.temp.skin.delta",
+  "name": "Температура кожи, дельта вендора",
+  "grain": "daily",
+  "trigger": "continuous",
+  "derivation": "vendor_estimate",
+  "episodes": "sleep",
+  "valueType": "num",
+  "unit": "°C от нормы",
+  "vendors": {
+   "oura": true,
+   "garmin": false,
+   "appleWatch": false,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Температура",
+  "metricCode": "body.temp.basal",
+  "name": "Базальная температура",
+  "grain": "point",
+  "trigger": "manual · on_demand",
+  "derivation": "measured",
+  "episodes": "day",
+  "valueType": "num",
+  "unit": "°C",
+  "vendors": {
+   "oura": false,
+   "garmin": false,
+   "appleWatch": false,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Тело",
+  "metricCode": "body.weight",
+  "name": "Вес",
+  "grain": "point",
+  "trigger": "manual · on_demand",
+  "derivation": "measured",
+  "episodes": "day",
+  "valueType": "num",
+  "unit": "кг",
+  "vendors": {
+   "oura": false,
+   "garmin": false,
+   "appleWatch": false,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Тело",
+  "metricCode": "body.fat.pct",
+  "name": "Процент жира",
+  "grain": "point",
+  "trigger": "on_demand",
+  "derivation": "vendor_aggregate",
+  "episodes": "day",
+  "valueType": "num",
+  "unit": "%",
+  "vendors": {
+   "oura": false,
+   "garmin": false,
+   "appleWatch": false,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Тело",
+  "metricCode": "body.muscle.mass",
+  "name": "Мышечная масса",
+  "grain": "point",
+  "trigger": "on_demand",
+  "derivation": "vendor_estimate",
+  "episodes": "day",
+  "valueType": "num",
+  "unit": "кг",
+  "vendors": {
+   "oura": false,
+   "garmin": false,
+   "appleWatch": false,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Тело",
+  "metricCode": "body.bone.mass",
+  "name": "Костная масса",
+  "grain": "point",
+  "trigger": "on_demand",
+  "derivation": "vendor_estimate",
+  "episodes": "day",
+  "valueType": "num",
+  "unit": "кг",
+  "vendors": {
+   "oura": false,
+   "garmin": false,
+   "appleWatch": false,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Тело",
+  "metricCode": "vitals.bp.systolic",
+  "name": "Давление систолическое",
+  "grain": "point",
+  "trigger": "on_demand",
+  "derivation": "measured",
+  "episodes": "day",
+  "valueType": "num",
+  "unit": "мм рт. ст.",
+  "vendors": {
+   "oura": false,
+   "garmin": false,
+   "appleWatch": false,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Тело",
+  "metricCode": "vitals.bp.diastolic",
+  "name": "Давление диастолическое",
+  "grain": "point",
+  "trigger": "on_demand",
+  "derivation": "measured",
+  "episodes": "day",
+  "valueType": "num",
+  "unit": "мм рт. ст.",
+  "vendors": {
+   "oura": false,
+   "garmin": false,
+   "appleWatch": false,
+   "whoop": false
+  }
+ },
+ {
+  "domain": "Тело",
+  "metricCode": "metabolic.glucose.cgm",
+  "name": "Глюкоза, CGM",
+  "grain": "point",
+  "trigger": "continuous",
+  "derivation": "measured",
+  "episodes": "day",
+  "valueType": "num",
+  "unit": "ммоль/л",
+  "vendors": {
+   "oura": false,
+   "garmin": false,
+   "appleWatch": false,
+   "whoop": false
+  }
+ }
+]

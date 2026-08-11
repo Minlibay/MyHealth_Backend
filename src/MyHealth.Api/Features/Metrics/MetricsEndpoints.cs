@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MyHealth.Api.Common;
 using MyHealth.Api.Data;
 using MyHealth.Api.Domain;
+using MyHealth.Api.Domain.Tracking;
 using MyHealth.Api.Features.Evaluation;
 
 namespace MyHealth.Api.Features.Metrics;
@@ -39,6 +40,20 @@ public record SampleDto(
             MetricEvaluator.Format(s.Metric, s.Value, s.Secondary),
             status, MetricEvaluator.Label(status));
     }
+
+    /// <summary>Запись новой схемы в прежнем формате ответа.</summary>
+    public static SampleDto? FromObservation(Observation o)
+    {
+        var metric = MetricCodeMap.FromCode(o.MetricCode);
+        if (metric is null || o.ValueNum is null) return null;
+        var value = o.ValueNum.Value;
+        var status = MetricEvaluator.Evaluate(metric.Value, value, o.ValueSecondary);
+        return new SampleDto(
+            o.Id, metric.Value, value, o.ValueSecondary, o.Unit, o.StartAt,
+            TrackingStore.SourceString(o.DeviceInstance),
+            MetricEvaluator.Format(metric.Value, value, o.ValueSecondary),
+            status, MetricEvaluator.Label(status));
+    }
 }
 
 public record MetricStatsDto(
@@ -62,7 +77,8 @@ public static class MetricsEndpoints
             .WithTags("Metrics")
             .RequireAuthorization();
 
-        // Пакетная загрузка измерений. Идемпотентна по (UserId, ClientId).
+        // Пакетная загрузка измерений в observations новой схемы.
+        // Контракт запроса не менялся — приложение присылает enum MetricType.
         group.MapPost("/", async (
             List<MetricSampleDto> items, ClaimsPrincipal principal, AppDbContext db) =>
         {
@@ -74,12 +90,15 @@ public static class MetricsEndpoints
                 .Where(i => i.ClientId is not null)
                 .Select(i => i.ClientId!)
                 .ToList();
-            var existing = await db.Samples
-                .Where(s => s.UserId == userId && s.ClientId != null &&
-                            clientIds.Contains(s.ClientId))
-                .Select(s => s.ClientId!)
-                .ToListAsync();
-            var existingSet = existing.ToHashSet();
+            var existingSet = (await db.Observations
+                .Where(o => o.UserId == userId && o.ClientId != null &&
+                            clientIds.Contains(o.ClientId))
+                .Select(o => o.ClientId!)
+                .ToListAsync()).ToHashSet();
+
+            var knownCodes = (await db.MetricDefinitions
+                .Select(m => m.MetricCode).ToListAsync()).ToHashSet();
+            var store = new TrackingStore(db);
 
             var inserted = 0;
             var seen = new HashSet<string>();
@@ -89,15 +108,19 @@ public static class MetricsEndpoints
                     (existingSet.Contains(i.ClientId) || !seen.Add(i.ClientId)))
                     continue;
 
-                db.Samples.Add(new HealthSample
+                var code = MetricCodeMap.ToCode(i.Metric);
+                if (!knownCodes.Contains(code)) continue;
+
+                var device = await store.ResolveDeviceAsync(userId.Value, i.Source);
+                db.Observations.Add(new Observation
                 {
                     UserId = userId.Value,
-                    Metric = i.Metric,
-                    Value = Normalize(i.Metric, i.Value),
-                    Secondary = i.Secondary,
+                    MetricCode = code,
+                    ValueNum = Normalize(i.Metric, i.Value),
+                    ValueSecondary = i.Secondary,
                     Unit = i.Unit,
-                    RecordedAt = i.RecordedAt,
-                    Source = i.Source,
+                    StartAt = i.RecordedAt,
+                    DeviceInstanceId = device?.Id,
                     ClientId = i.ClientId,
                 });
                 inserted++;
@@ -116,17 +139,14 @@ public static class MetricsEndpoints
             var userId = principal.GetUserId();
             if (userId is null) return Results.Unauthorized();
 
-            var q = db.Samples.AsNoTracking().Where(s => s.UserId == userId);
-            if (metric is not null) q = q.Where(s => s.Metric == metric);
-            if (from is not null) q = q.Where(s => s.RecordedAt >= from);
-            if (to is not null) q = q.Where(s => s.RecordedAt <= to);
-
-            var data = await q
-                .OrderByDescending(s => s.RecordedAt)
+            var store = new TrackingStore(db);
+            var data = await store.Query(userId.Value, metric, from, to)
+                .OrderByDescending(o => o.StartAt)
                 .Take(Math.Clamp(limit, 1, 5000))
                 .ToListAsync();
 
-            return Results.Ok(data.Select(SampleDto.From));
+            return Results.Ok(data.Select(SampleDto.FromObservation)
+                .Where(d => d is not null));
         });
 
         // Последнее значение по каждому показателю (со статусом).
@@ -135,16 +155,17 @@ public static class MetricsEndpoints
             var userId = principal.GetUserId();
             if (userId is null) return Results.Unauthorized();
 
-            var latest = await db.Samples.AsNoTracking()
-                .Where(s => s.UserId == userId)
-                .GroupBy(s => s.Metric)
-                .Select(g => g.OrderByDescending(s => s.RecordedAt).First())
+            var store = new TrackingStore(db);
+            var latest = await store.Query(userId.Value, null, null, null)
+                .GroupBy(o => o.MetricCode)
+                .Select(g => g.OrderByDescending(o => o.StartAt).First())
                 .ToListAsync();
 
-            return Results.Ok(latest.Select(SampleDto.From));
+            return Results.Ok(latest.Select(SampleDto.FromObservation)
+                .Where(d => d is not null));
         });
 
-        // Статистика по показателю за период: среднее/мин/макс/кол-во + статус последнего.
+        // Статистика по показателю за период: среднее/мин/макс/кол-во + статус.
         group.MapGet("/stats", async (
             ClaimsPrincipal principal, AppDbContext db,
             MetricType? metric, DateTimeOffset? from, DateTimeOffset? to) =>
@@ -152,29 +173,31 @@ public static class MetricsEndpoints
             var userId = principal.GetUserId();
             if (userId is null) return Results.Unauthorized();
 
-            var q = db.Samples.AsNoTracking().Where(s => s.UserId == userId);
-            if (metric is not null) q = q.Where(s => s.Metric == metric);
-            if (from is not null) q = q.Where(s => s.RecordedAt >= from);
-            if (to is not null) q = q.Where(s => s.RecordedAt <= to);
-
-            var agg = await q
-                .GroupBy(s => s.Metric)
+            var store = new TrackingStore(db);
+            var agg = await store.Query(userId.Value, metric, from, to)
+                .Where(o => o.ValueNum != null)
+                .GroupBy(o => o.MetricCode)
                 .Select(g => new
                 {
-                    Metric = g.Key,
+                    MetricCode = g.Key,
                     Count = g.Count(),
-                    Avg = g.Average(x => x.Value),
-                    Min = g.Min(x => x.Value),
-                    Max = g.Max(x => x.Value),
-                    Latest = g.OrderByDescending(x => x.RecordedAt).First().Value,
+                    Avg = g.Average(x => x.ValueNum!.Value),
+                    Min = g.Min(x => x.ValueNum!.Value),
+                    Max = g.Max(x => x.ValueNum!.Value),
+                    Latest = g.OrderByDescending(x => x.StartAt).First().ValueNum!.Value,
                     LatestSecondary =
-                        g.OrderByDescending(x => x.RecordedAt).First().Secondary,
+                        g.OrderByDescending(x => x.StartAt).First().ValueSecondary,
                 })
                 .ToListAsync();
 
-            var result = agg.Select(a => new MetricStatsDto(
-                a.Metric, a.Count, a.Avg, a.Min, a.Max, a.Latest,
-                MetricEvaluator.Evaluate(a.Metric, a.Latest, a.LatestSecondary)));
+            var result = agg
+                .Select(a => (Metric: MetricCodeMap.FromCode(a.MetricCode), Agg: a))
+                .Where(x => x.Metric is not null)
+                .Select(x => new MetricStatsDto(
+                    x.Metric!.Value, x.Agg.Count, x.Agg.Avg, x.Agg.Min, x.Agg.Max,
+                    x.Agg.Latest,
+                    MetricEvaluator.Evaluate(
+                        x.Metric.Value, x.Agg.Latest, x.Agg.LatestSecondary)));
 
             return Results.Ok(result);
         });
